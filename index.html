@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aplikasi MVR - Simulasi Ekosistem (STEM-DT VR)</title>
+  <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+  <style>
+    :root {
+      --ink: #f8fafc;
+      --muted: #94a3b8;
+      --line: rgba(148, 163, 184, 0.16);
+      --panel: rgba(15, 23, 42, 0.84);
+      --cyan: #38bdf8;
+      --green: #34d399;
+      --amber: #facc15;
+      --red: #f87171;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: #020617;
+      font-family: Inter, "Segoe UI", system-ui, -apple-system, sans-serif;
+    }
+
+    .a-enter-vr {
+      right: 18px !important;
+      bottom: 124px !important;
+    }
+
+    .a-enter-vr-button {
+      width: 46px !important;
+      height: 46px !important;
+      border-radius: 14px !important;
+      background: rgba(15, 23, 42, 0.92) !important;
+      border: 1px solid rgba(56, 189, 248, 0.45) !important;
+      box-shadow: 0 12px 32px rgba(2, 6, 23, 0.38);
+    }
+
+    .desktop-ui {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+      color: var(--ink);
+    }
+
+    .topbar,
+    .stage-dock,
+    .control-dock {
+      pointer-events: auto;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: 0 16px 48px rgba(2, 6, 23, 0.28);
+    }
+
+    .topbar {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      right: 18px;
+      height: 58px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 14px 8px 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: #082f49;
+      background: linear-gradient(135deg, #7dd3fc, #22d3ee);
+      box-shadow: 0 8px 24px rgba(56, 189, 248, 0.22);
+    }
+
+    .brand-copy strong {
+      display: block;
+      font-size: 13.5px;
+      letter-spacing: 0.01em;
+    }
+
+    .brand-copy span {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-pill {
+      height: 38px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 13px;
+      border-radius: 12px;
+      color: #cbd5e1;
+      background: rgba(51, 65, 85, 0.55);
+      border: 1px solid var(--line);
+      font-size: 12px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--amber);
+      box-shadow: 0 0 14px rgba(250, 204, 21, 0.7);
+      transition: background 200ms ease, box-shadow 200ms ease;
+    }
+
+    .status-pill.connected .status-dot {
+      background: var(--green);
+      box-shadow: 0 0 14px rgba(52, 211, 153, 0.75);
+    }
+
+    .status-pill.disconnected .status-dot {
+      background: var(--red);
+      box-shadow: 0 0 14px rgba(248, 113, 113, 0.75);
+    }
+
+    .dock-button {
+      border: 1px solid var(--line);
+      color: var(--ink);
+      cursor: pointer;
+      font: inherit;
+      font-weight: 600;
+      transition: 160ms ease;
+    }
+
+    .dock-button:hover {
+      filter: brightness(1.12);
+      transform: translateY(-1px);
+    }
+
+    .stage-dock {
+      position: absolute;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      height: 68px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px;
+    }
+
+    .stage-button {
+      min-width: 118px;
+      height: 52px;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      padding: 7px 11px;
+      color: #94a3b8;
+      background: transparent;
+      cursor: pointer;
+      text-align: left;
+      font: inherit;
+      transition: 160ms ease;
+    }
+
+    .stage-button:hover {
+      background: rgba(51, 65, 85, 0.45);
+      color: #e2e8f0;
+    }
+
+    .stage-button.active {
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.28), rgba(56, 189, 248, 0.12));
+      border-color: rgba(56, 189, 248, 0.5);
+      color: #f8fafc;
+    }
+
+    .stage-button.done {
+      border-color: rgba(52, 211, 153, 0.28);
+    }
+
+    .stage-button strong {
+      display: block;
+      font-size: 12px;
+    }
+
+    .stage-button span {
+      display: block;
+      margin-top: 3px;
+      font-size: 9.5px;
+      white-space: nowrap;
+    }
+
+    .control-dock {
+      position: absolute;
+      right: 18px;
+      bottom: 18px;
+      width: 164px;
+      border-radius: 18px;
+      padding: 8px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 7px;
+    }
+
+    .dock-button {
+      height: 40px;
+      border-radius: 11px;
+      background: rgba(51, 65, 85, 0.72);
+      font-size: 11.5px;
+    }
+
+    .dock-button.confirm {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, #0284c7, #0891b2);
+      border-color: rgba(125, 211, 252, 0.35);
+      font-weight: 700;
+    }
+
+    .dock-button.revise {
+      color: #fecaca;
+    }
+
+    .dock-button.export {
+      color: #cbd5e1;
+    }
+
+    @media (max-width: 980px) {
+      .brand-copy span { display: none; }
+      .stage-dock {
+        left: 18px;
+        right: 18px;
+        transform: none;
+        overflow-x: auto;
+      }
+      .stage-button { min-width: 104px; }
+      .control-dock { display: none; }
+      .a-enter-vr { bottom: 96px !important; }
+    }
+
+    @media (max-width: 640px) {
+      .topbar { height: 52px; top: 10px; left: 10px; right: 10px; }
+      .brand-mark { width: 34px; height: 34px; }
+      .brand-copy strong { font-size: 11.5px; }
+      .status-pill { height: 34px; max-width: 150px; overflow: hidden; font-size: 10.5px; }
+      .stage-dock { bottom: 10px; left: 10px; right: 10px; height: 62px; }
+      .stage-button { min-width: 82px; height: 46px; }
+      .stage-button span { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="desktop-ui" id="desktopUi">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">M</div>
+        <div class="brand-copy">
+          <strong>Simulasi Ekosistem Sungai</strong>
+          <span>STEM-DT · Mixed & Virtual Reality</span>
+        </div>
+      </div>
+      <div class="top-actions">
+        <div class="status-pill" id="desktopStatus">
+          <span class="status-dot"></span>
+          <span id="desktopStatusText">Memeriksa koneksi...</span>
+        </div>
+      </div>
+    </header>
+
+    <nav class="stage-dock" aria-label="Tahap pembelajaran">
+      <button class="stage-button active" type="button" data-stage="EA" onclick="selectStage('EA')">
+        <strong>1 · EA</strong><span>Empathize & Ask</span>
+      </button>
+      <button class="stage-button" type="button" data-stage="DI" onclick="selectStage('DI')">
+        <strong>2 · DI</strong><span>Define & Imagine</span>
+      </button>
+      <button class="stage-button" type="button" data-stage="IP" onclick="selectStage('IP')">
+        <strong>3 · IP</strong><span>Ideate & Plan</span>
+      </button>
+      <button class="stage-button" type="button" data-stage="PC" onclick="selectStage('PC')">
+        <strong>4 · PC</strong><span>Prototype & Create</span>
+      </button>
+      <button class="stage-button" type="button" data-stage="TI" onclick="selectStage('TI')">
+        <strong>5 · TI</strong><span>Test & Improve</span>
+      </button>
+    </nav>
+
+    <aside class="control-dock" aria-label="Kontrol simulasi">
+      <button class="dock-button revise" type="button" onclick="handleReviseAction()">Revisi</button>
+      <button class="dock-button export" type="button" onclick="exportCSV()" title="Simpan catatan interaksi">Ekspor</button>
+      <button class="dock-button confirm" type="button" onclick="handleConfirmAction()">Konfirmasi</button>
+    </aside>
+  </div>
+
+  <a-scene background="color: #0f172a">
+    <a-light type="ambient" color="#ffffff" intensity="1.0"></a-light>
+    <a-light type="directional" position="-2 4 2" intensity="0.7"></a-light>
+    <a-sky color="#0f172a"></a-sky>
+
+    <a-plane rotation="-90 0 0" width="24" height="24" color="#0b1120" position="0 0 0"></a-plane>
+    <a-entity position="0 0.005 0" rotation="-90 0 0">
+      <a-ring radius-inner="2.6" radius-outer="2.63" color="#1e293b"></a-ring>
+      <a-ring radius-inner="3.9" radius-outer="3.93" color="#1e293b"></a-ring>
+    </a-entity>
+
+    <!-- ================= PANEL UTAMA MVR 3D (KIRI-TENGAH) ================= -->
+    <a-entity id="mainPanel" position="-0.75 1.58 -3.65">
+      <a-plane width="4.44" height="3.18" color="#334155" material="shader: flat;" position="0 0 -0.01"></a-plane>
+      <a-plane width="4.40" height="3.14" color="#0f172a" material="shader: flat;" position="0 0 0"></a-plane>
+
+      <!-- 1. HEADER BAR -->
+      <a-plane width="4.24" height="0.42" color="#1e293b" material="shader: flat;" position="0 1.31 0.01"></a-plane>
+      <a-text value="Simulasi Ekosistem Sungai (STEM-DT)" position="-2.02 1.38 0.02" color="#f8fafc" width="2.85" wrap-count="42" font-weight="bold"></a-text>
+      <a-text value="Pilih tahap pembelajaran, tentukan jawaban terbaik, lalu konfirmasi." position="-2.02 1.22 0.02" color="#94a3b8" width="2.55" wrap-count="64"></a-text>
+
+      <!-- Lencana Status Koneksi -->
+      <a-plane id="vrStatusBg" width="1.18" height="0.25" color="#334155" material="shader: flat;" position="1.44 1.31 0.02"></a-plane>
+      <a-text id="vrConnectionStatus" value="Menunggu Koneksi" align="center" position="1.44 1.31 0.03" color="#f8fafc" width="1.22" wrap-count="22"></a-text>
+
+      <!-- 2. NAVIGASI 5 TAHAP STEM-DT -->
+      <a-entity id="stagesRow" position="0 0.90 0.01">
+        <a-entity id="stageCard-EA" position="-1.70 0 0" class="clickable" onclick="selectStage('EA')">
+          <a-plane id="stageBorder-EA" width="0.81" height="0.33" color="#38bdf8" material="shader: flat;" position="0 0 0.01"></a-plane>
+          <a-plane id="stageBg-EA" width="0.77" height="0.29" color="#0369a1" material="shader: flat;" position="0 0 0.02"></a-plane>
+          <a-text id="stageTitle-EA" value="1. EA" align="center" position="0 0.055 0.04" color="#f8fafc" width="1.35" wrap-count="20" font-weight="bold"></a-text>
+          <a-text id="stageSub-EA" value="Empathize & Ask" align="center" position="0 -0.06 0.04" color="#e2e8f0" width="0.72" wrap-count="20"></a-text>
+          <a-circle id="stageDoneBg-EA" radius="0.04" color="#16a34a" position="0.31 0.09 0.04" visible="false"></a-circle>
+          <a-text id="stageDoneTxt-EA" value="v" align="center" position="0.31 0.09 0.05" color="#ffffff" width="1.1" visible="false"></a-text>
+        </a-entity>
+
+        <a-entity id="stageCard-DI" position="-0.85 0 0" class="clickable" onclick="selectStage('DI')">
+          <a-plane id="stageBorder-DI" width="0.81" height="0.33" color="#334155" material="shader: flat;" position="0 0 0.01"></a-plane>
+          <a-plane id="stageBg-DI" width="0.77" height="0.29" color="#1e293b" material="shader: flat;" position="0 0 0.02"></a-plane>
+          <a-text id="stageTitle-DI" value="2. DI" align="center" position="0 0.055 0.04" color="#cbd5e1" width="1.35" wrap-count="20" font-weight="bold"></a-text>
+          <a-text id="stageSub-DI" value="Define & Imagine" align="center" position="0 -0.06 0.04" color="#94a3b8" width="0.72" wrap-count="20"></a-text>
+          <a-circle id="stageDoneBg-DI" radius="0.04" color="#16a34a" position="0.31 0.09 0.04" visible="false"></a-circle>
+          <a-text id="stageDoneTxt-DI" value="v" align="center" position="0.31 0.09 0.05" color="#ffffff" width="1.1" visible="false"></a-text>
+        </a-entity>
+
+        <a-entity id="stageCard-IP" position="0 0 0" class="clickable" onclick="selectStage('IP')">
+          <a-plane id="stageBorder-IP" width="0.81" height="0.33" color="#334155" material="shader: flat;" position="0 0 0.01"></a-plane>
+          <a-plane id="stageBg-IP" width="0.77" height="0.29" color="#1e293b" material="shader: flat;" position="0 0 0.02"></a-plane>
+          <a-text id="stageTitle-IP" value="3. IP" align="center" position="0 0.055 0.04" color="#cbd5e1" width="1.35" wrap-count="20" font-weight="bold"></a-text>
+          <a-text id="stageSub-IP" value="Ideate & Plan" align="center" position="0 -0.06 0.04" color="#94a3b8" width="0.72" wrap-count="20"></a-text>
+          <a-circle id="stageDoneBg-IP" radius="0.04" color="#16a34a" position="0.31 0.09 0.04" visible="false"></a-circle>
+          <a-text id="stageDoneTxt-IP" value="v" align="center" position="0.31 0.09 0.05" color="#ffffff" width="1.1" visible="false"></a-text>
+        </a-entity>
+
+        <a-entity id="stageCard-PC" position="0.85 0 0" class="clickable" onclick="selectStage('PC')">
+          <a-plane id="stageBorder-PC" width="0.81" height="0.33" color="#334155" material="shader: flat;" position="0 0 0.01"></a-plane>
+          <a-plane id="stageBg-PC" width="0.77" height="0.29" color="#1e293b" material="shader: flat;" position="0 0 0.02"></a-plane>
+          <a-text id="stageTitle-PC" value="4. PC" align="center" position="0 0.055 0.04" color="#cbd5e1" width="1.35" wrap-count="20" font-weight="bold"></a-text>
+          <a-text id="stageSub-PC" value="Prototype & Create" align="center" position="0 -0.06 0.04" color="#94a3b8" width="0.72" wrap-count="20"></a-text>
+          <a-circle id="stageDoneBg-PC" radius="0.04" color="#16a34a" position="0.31 0.09 0.04" visible="false"></a-circle>
+          <a-text id="stageDoneTxt-PC" value="v" align="center" position="0.31 0.09 0.05" color="#ffffff" width="1.1" visible="false"></a-text>
+        </a-entity>
+
+        <a-entity id="stageCard-TI" position="1.70 0 0" class="clickable" onclick="selectStage('TI')">
+          <a-plane id="stageBorder-TI" width="0.81" height="0.33" color="#334155" material="shader: flat;" position="0 0 0.01"></a-plane>
+          <a-plane id="stageBg-TI" width="0.77" height="0.29" color="#1e293b" material="shader: flat;" position="0 0 0.02"></a-plane>
+          <a-text id="stageTitle-TI" value="5. TI" align="center" position="0 0.055 0.04" color="#cbd5e1" width="1.35" wrap-count="20" font-weight="bold"></a-text>
+          <a-text id="stageSub-TI" value="Test & Improve" align="center" position="0 -0.06 0.04" color="#94a3b8" width="0.72" wrap-count="20"></a-text>
+          <a-circle id="stageDoneBg-TI" radius="0.04" color="#16a34a" position="0.31 0.09 0.04" visible="false"></a-circle>
+          <a-text id="stageDoneTxt-TI" value="v" align="center" position="0.31 0.09 0.05" color="#ffffff" width="1.1" visible="false"></a-text>
+        </a-entity>
+      </a-entity>
+
+      <!-- 3. LAYAR SIMULASI MVR VIEWPORT -->
+      <a-entity id="mvrViewport" position="0 -0.44 0.01">
+        <a-plane width="4.24" height="2.20" color="#38bdf8" material="shader: flat;" position="0 0 0"></a-plane>
+        <a-plane width="4.20" height="2.16" color="#162032" material="shader: flat;" position="0 0 0.01"></a-plane>
+
+        <a-plane width="3.96" height="0.18" color="#0284c7" material="shader: flat;" position="0 0.92 0.02"></a-plane>
+        <a-text id="vrSceneTag" value="TAHAP 1 (EA) - MENGAMATI FENOMENA & MERUMUSKAN PERTANYAAN" position="-1.91 0.92 0.03" color="#e0f2fe" width="3.55" wrap-count="68" font-weight="bold"></a-text>
+
+        <a-text id="vrQuestionTitle" value="Memuat skenario..." position="-1.96 0.73 0.03" color="#f8fafc" width="3.72" wrap-count="60" baseline="top"></a-text>
+        <a-text id="vrQuestionDesc" value="" position="-1.96 0.45 0.03" color="#cbd5e1" width="3.55" wrap-count="76" baseline="top"></a-text>
+
+        <a-entity id="optCard-1" position="0 0.14 0.02" class="clickable" onclick="selectOptionManual(1)">
+          <a-plane id="optBorder-1" width="3.96" height="0.21" color="#334155" material="shader: flat;" position="0 0 0"></a-plane>
+          <a-plane id="optBg-1" width="3.92" height="0.18" color="#1e293b" material="shader: flat;" position="0 0 0.01"></a-plane>
+          <a-circle id="optNumBg-1" radius="0.06" color="#334155" position="-1.83 0 0.02"></a-circle>
+          <a-text id="optNumTxt-1" value="1" align="center" position="-1.83 0 0.03" color="#f8fafc" width="2.0" font-weight="bold"></a-text>
+          <a-text id="optText-1" value="Opsi 1" position="-1.71 0 0.03" color="#f8fafc" width="3.48" wrap-count="76"></a-text>
+        </a-entity>
+
+        <a-entity id="optCard-2" position="0 -0.10 0.02" class="clickable" onclick="selectOptionManual(2)">
+          <a-plane id="optBorder-2" width="3.96" height="0.21" color="#334155" material="shader: flat;" position="0 0 0"></a-plane>
+          <a-plane id="optBg-2" width="3.92" height="0.18" color="#1e293b" material="shader: flat;" position="0 0 0.01"></a-plane>
+          <a-circle id="optNumBg-2" radius="0.06" color="#334155" position="-1.83 0 0.02"></a-circle>
+          <a-text id="optNumTxt-2" value="2" align="center" position="-1.83 0 0.03" color="#f8fafc" width="2.0" font-weight="bold"></a-text>
+          <a-text id="optText-2" value="Opsi 2" position="-1.71 0 0.03" color="#f8fafc" width="3.48" wrap-count="76"></a-text>
+        </a-entity>
+
+        <a-entity id="optCard-3" position="0 -0.34 0.02" class="clickable" onclick="selectOptionManual(3)">
+          <a-plane id="optBorder-3" width="3.96" height="0.21" color="#334155" material="shader: flat;" position="0 0 0"></a-plane>
+          <a-plane id="optBg-3" width="3.92" height="0.18" color="#1e293b" material="shader: flat;" position="0 0 0.01"></a-plane>
+          <a-circle id="optNumBg-3" radius="0.06" color="#334155" position="-1.83 0 0.02"></a-circle>
+          <a-text id="optNumTxt-3" value="3" align="center" position="-1.83 0 0.03" color="#f8fafc" width="2.0" font-weight="bold"></a-text>
+          <a-text id="optText-3" value="Opsi 3" position="-1.71 0 0.03" color="#f8fafc" width="3.48" wrap-count="76"></a-text>
+        </a-entity>
+
+        <a-entity id="optCard-4" position="0 -0.58 0.02" class="clickable" onclick="selectOptionManual(4)">
+          <a-plane id="optBorder-4" width="3.96" height="0.21" color="#334155" material="shader: flat;" position="0 0 0"></a-plane>
+          <a-plane id="optBg-4" width="3.92" height="0.18" color="#1e293b" material="shader: flat;" position="0 0 0.01"></a-plane>
+          <a-circle id="optNumBg-4" radius="0.06" color="#334155" position="-1.83 0 0.02"></a-circle>
+          <a-text id="optNumTxt-4" value="4" align="center" position="-1.83 0 0.03" color="#f8fafc" width="2.0" font-weight="bold"></a-text>
+          <a-text id="optText-4" value="Opsi 4" position="-1.71 0 0.03" color="#f8fafc" width="3.48" wrap-count="76"></a-text>
+        </a-entity>
+
+        <a-entity id="vrFeedbackGroup" position="0 -0.88 0.02">
+          <a-plane id="vrFeedbackBorder" width="3.96" height="0.27" color="#334155" material="shader: flat;" position="0 0 0"></a-plane>
+          <a-plane id="vrFeedbackBg" width="3.92" height="0.24" color="#0f172a" material="shader: flat;" position="0 0 0.01"></a-plane>
+          <a-text id="vrFeedbackText" value="Siap belajar! Pilih salah satu opsi jawaban di atas, lalu tekan Konfirmasi." position="-1.90 0 0.02" color="#facc15" width="3.55" wrap-count="74"></a-text>
+        </a-entity>
+      </a-entity>
+    </a-entity>
+
+    <!-- ================= PANEL SAMPING KANAN: DASHBOARD PROFIL & LOG ================= -->
+    <a-entity id="dashboardPanel" position="2.62 1.58 -3.02" rotation="0 -30 0">
+      <a-plane width="2.34" height="3.18" color="#334155" material="shader: flat;" position="0 0 -0.01"></a-plane>
+      <a-plane width="2.30" height="3.14" color="#1e293b" material="shader: flat;" position="0 0 0"></a-plane>
+
+      <a-text value="Ringkasan & Profil Belajar" position="-1.04 1.40 0.02" color="#38bdf8" width="1.85" wrap-count="32" font-weight="bold"></a-text>
+      <a-plane width="2.08" height="0.01" color="#334155" material="shader: flat;" position="0 1.30 0.02"></a-plane>
+
+      <!-- Kartu 1: Percobaan -->
+      <a-plane width="0.64" height="0.46" color="#0f172a" material="shader: flat;" position="-0.72 1.00 0.02"></a-plane>
+      <a-text id="vrTotalAttempt" value="0" align="center" position="-0.72 1.06 0.03" color="#facc15" width="2.2" wrap-count="20" font-weight="bold"></a-text>
+      <a-text value="Percobaan" align="center" position="-0.72 0.87 0.03" color="#94a3b8" width="0.62" wrap-count="16"></a-text>
+
+      <!-- Kartu 2: Revisi -->
+      <a-plane width="0.64" height="0.46" color="#0f172a" material="shader: flat;" position="0 1.00 0.02"></a-plane>
+      <a-text id="vrTotalRevise" value="0" align="center" position="0 1.06 0.03" color="#facc15" width="2.2" wrap-count="20" font-weight="bold"></a-text>
+      <a-text value="Revisi" align="center" position="0 0.87 0.03" color="#94a3b8" width="0.62" wrap-count="16"></a-text>
+
+      <!-- Kartu 3: Profil Mindset -->
+      <a-plane width="0.68" height="0.46" color="#0f172a" material="shader: flat;" position="0.72 1.00 0.02"></a-plane>
+      <a-text id="vrGmProfile" value="Eksplorasi" align="center" position="0.72 1.06 0.03" color="#34d399" width="0.66" wrap-count="16" font-weight="bold"></a-text>
+      <a-text value="Profil Belajar" align="center" position="0.72 0.87 0.03" color="#94a3b8" width="0.64" wrap-count="16"></a-text>
+
+      <!-- Log Aktivitas Real-Time -->
+      <a-text value="Log Aktivitas Real-Time" position="-1.04 0.58 0.02" color="#38bdf8" width="1.85" wrap-count="32" font-weight="bold"></a-text>
+      <a-plane width="2.08" height="0.01" color="#334155" material="shader: flat;" position="0 0.49 0.02"></a-plane>
+
+      <a-plane width="2.08" height="1.88" color="#020617" material="shader: flat;" position="0 -0.50 0.02"></a-plane>
+      <a-text id="vrLogBox" value="[SIAP] Menunggu koneksi kontroler..." position="-0.98 0.38 0.03" color="#94a3b8" width="1.85" wrap-count="38" baseline="top" line-height="54"></a-text>
+    </a-entity>
+
+    <!-- Kamera & Kontroler Meta Quest 3 -->
+    <a-entity camera look-controls position="0 1.6 0">
+      <a-entity cursor="fuse: false; rayOrigin: mouse;" raycaster="objects: .clickable"></a-entity>
+      <a-entity cursor="fuse: false;"
+                position="0 0 -1"
+                geometry="primitive: ring; radiusInner: 0.005; radiusOuter: 0.009;"
+                material="color: #38bdf8; shader: flat;"
+                raycaster="objects: .clickable">
+      </a-entity>
+    </a-entity>
+    <a-entity laser-controls="hand: left" raycaster="objects: .clickable; far: 10"></a-entity>
+    <a-entity laser-controls="hand: right" raycaster="objects: .clickable; far: 10"></a-entity>
+  </a-scene>
+
+  <script>
+    const stageOrder = ["EA", "DI", "IP", "PC", "TI"];
+
+    const stemScenarios = {
+      "EA": {
+        tag: "TAHAP 1 (EA) - MENGAMATI FENOMENA & MERUMUSKAN PERTANYAAN",
+        title: "Bukti fenomena apa yang paling relevan menjelaskan menurunnya populasi ikan di sungai ini?",
+        desc: "Amati kondisi lingkungan sungai di depan Anda, pilih bukti pengamatan yang paling tepat, lalu tekan Konfirmasi.",
+        options: [
+          "1. Air sungai tampak keruh dengan lapisan busa limbah dan kadar oksigen terlarut rendah.",
+          "2. Terdapat beberapa bebatuan besar di tepi sungai yang terkena sinar matahari.",
+          "3. Suara aliran air terdengar lebih deras dibandingkan area hulu sungai.",
+          "4. Pohon-pohon di sekitar bantaran sungai memiliki daun berwarna hijau."
+        ],
+        correctIndex: 1,
+        successMsg: "TEPAT! Keruhnya air dan rendahnya oksigen merupakan bukti ilmiah utama pencemaran. Lanjut ke Tahap 2 (DI).",
+        failMsg: "KURANG TEPAT! Bukti tersebut tidak berkaitan langsung dengan kematian ikan. Tekan Revisi untuk memilih ulang."
+      },
+      "DI": {
+        tag: "TAHAP 2 (DI) - MENETAPKAN MASALAH UTAMA & IDE AWAL SOLUSI",
+        title: "Apa rumusan masalah utama yang harus segera diselesaikan pada ekosistem sungai tersebut?",
+        desc: "Berdasarkan bukti pada tahap sebelumnya, tentukan akar masalah ekosistem dan arah solusi awalnya.",
+        options: [
+          "1. Kekurangan cahaya matahari akibat terlalu banyak tanaman air di permukaan.",
+          "2. Eutrofikasi dan penurunan kadar oksigen akibat pembuangan limbah organik tanpa filtrasi.",
+          "3. Kecepatan arus sungai terlalu lambat sehingga ikan sulit berenang.",
+          "4. Kurangnya jumlah predator alami di dalam ekosistem sungai."
+        ],
+        correctIndex: 2,
+        successMsg: "BENAR! Akar masalah berhasil ditetapkan. Silakan lanjut ke Tahap 3 (IP).",
+        failMsg: "BELUM TEPAT! Periksa kembali hubungan antara limbah dan oksigen terlarut. Tekan Revisi untuk memperbaiki pilihan."
+      },
+      "IP": {
+        tag: "TAHAP 3 (IP) - MENGEMBANGKAN IDE & MENYUSUN RENCANA PERCOBAAN",
+        title: "Rencana desain solusi manakah yang paling efektif untuk memulihkan kualitas air sungai?",
+        desc: "Pilih rancangan sistem pemulihan ekosistem yang akan diuji pada simulasi.",
+        options: [
+          "1. Menutup seluruh permukaan sungai dengan terpal plastik agar tidak terkena hujan.",
+          "2. Menambahkan bahan kimia kaporit secara langsung ke dalam aliran sungai.",
+          "3. Membangun bio-filter bertingkat (zeolit, arang aktif) serta aerator penambah oksigen.",
+          "4. Memindahkan seluruh ikan ke kolam beton tanpa memperbaiki kualitas air sungai."
+        ],
+        correctIndex: 3,
+        successMsg: "RENCANA DISETUJUI! Bio-filter dan aerator siap diuji. Silakan lanjut ke Tahap 4 (PC).",
+        failMsg: "RENCANA BERISIKO! Solusi tersebut justru merusak keseimbangan biotik. Tekan Revisi untuk menyusun ulang rencana."
+      },
+      "PC": {
+        tag: "TAHAP 4 (PC) - MEMBUAT MODEL VIRTUAL & MENJALANKAN SIMULASI",
+        title: "Atur parameter aerasi dan ketebalan media bio-filter pada prototipe virtual:",
+        desc: "Pilih rasio kapasitas prototipe yang paling seimbang, lalu tekan Konfirmasi untuk menjalankan simulasi.",
+        options: [
+          "1. Konfigurasi Rendah: 1 Lapis Filter + Aerasi 20% (Hemat energi, filtrasi lambat)",
+          "2. Konfigurasi Sedang: 2 Lapis Filter + Aerasi 50% (Filtrasi parsial)",
+          "3. Konfigurasi Optimal: 3 Lapis Bio-Filter + Aerasi 80% (Keseimbangan DO & kejernihan)",
+          "4. Konfigurasi Ekstrem: Tanpa Filter + Aerasi 100% (Arus terlalu turbulen)"
+        ],
+        correctIndex: 3,
+        successMsg: "SIMULASI BERHASIL! Prototipe menunjukkan peningkatan kualitas air. Lanjut ke Tahap 5 (TI).",
+        failMsg: "HASIL BELUM OPTIMAL! Parameter ini belum mampu menormalkan kadar oksigen. Tekan Revisi untuk mengatur ulang."
+      },
+      "TI": {
+        tag: "TAHAP 5 (TI) - MENGUJI HASIL, MENILAI EFEKTIVITAS & REVISI",
+        title: "Berdasarkan grafik hasil uji simulasi (Oksigen naik ke 7.2 mg/L), apa kesimpulan akhir Anda?",
+        desc: "Evaluasi efektivitas prototipe bio-filter & aerator berdasarkan data sensor kualitas air.",
+        options: [
+          "1. Solusi efektif memulihkan ekosistem; siap diterapkan dengan pemantauan berkala.",
+          "2. Solusi gagal total karena kadar oksigen terlalu tinggi bagi ikan air tawar.",
+          "3. Bio-filter tidak berpengaruh sama sekali terhadap kejernihan air sungai.",
+          "4. Perlu menghentikan seluruh aliran sungai secara permanen."
+        ],
+        correctIndex: 1,
+        successMsg: "SELAMAT! Seluruh 5 tahap pembelajaran STEM-Design Thinking telah selesai dengan tuntas.",
+        failMsg: "EVALUASI KELIRU! Kadar oksigen 7.2 mg/L adalah kondisi ideal bagi ikan. Tekan Revisi untuk meninjau ulang."
+      }
+    };
+
+    let currentStage = "EA";
+    let selectedOption = 1;
+    let isLockedForRevise = false;
+    let totalAttempts = 0;
+    let totalRevises = 0;
+    let completedStages = new Set();
+    let interactionHistory = [];
+    let logLines = [];
+
+    // Status koneksi Bluetooth periodik
+    let lastBtHeartbeat = 0;
+    let btConnectionState = "waiting"; // "waiting" | "connected" | "disconnected"
+    const BT_TIMEOUT_MS = 6000;
+
+    function renderVRScene() {
+      const sc = stemScenarios[currentStage];
+      updateDesktopInterface();
+      document.getElementById('vrSceneTag').setAttribute('value', sc.tag);
+      document.getElementById('vrQuestionTitle').setAttribute('value', sc.title);
+      document.getElementById('vrQuestionDesc').setAttribute('value', sc.desc);
+
+      stageOrder.forEach(code => {
+        const isActive = (code === currentStage);
+        const isDone = completedStages.has(code);
+        const borderEl = document.getElementById('stageBorder-' + code);
+        const bgEl = document.getElementById('stageBg-' + code);
+        const titleEl = document.getElementById('stageTitle-' + code);
+        const subEl = document.getElementById('stageSub-' + code);
+        const doneBgEl = document.getElementById('stageDoneBg-' + code);
+        const doneTxtEl = document.getElementById('stageDoneTxt-' + code);
+
+        if (isActive) {
+          borderEl.setAttribute('color', '#38bdf8');
+          bgEl.setAttribute('color', '#0369a1');
+          titleEl.setAttribute('color', '#f8fafc');
+          subEl.setAttribute('color', '#e0f2fe');
+        } else {
+          borderEl.setAttribute('color', '#334155');
+          bgEl.setAttribute('color', '#1e293b');
+          titleEl.setAttribute('color', '#cbd5e1');
+          subEl.setAttribute('color', '#94a3b8');
+        }
+
+        doneBgEl.setAttribute('visible', isDone);
+        doneTxtEl.setAttribute('visible', isDone);
+      });
+
+      const baseY = [0.14, -0.10, -0.34, -0.58];
+      sc.options.forEach((optText, idx) => {
+        const optNum = idx + 1;
+        const isSelected = (optNum === selectedOption);
+
+        const cardEl = document.getElementById('optCard-' + optNum);
+        const borderEl = document.getElementById('optBorder-' + optNum);
+        const bgEl = document.getElementById('optBg-' + optNum);
+        const numBgEl = document.getElementById('optNumBg-' + optNum);
+        const numTxtEl = document.getElementById('optNumTxt-' + optNum);
+
+        document.getElementById('optText-' + optNum).setAttribute('value', optText);
+
+        if (isSelected) {
+          cardEl.setAttribute('position', `0.04 ${baseY[idx]} 0.03`);
+          borderEl.setAttribute('color', '#facc15');
+          bgEl.setAttribute('color', '#422006');
+          numBgEl.setAttribute('color', '#facc15');
+          numTxtEl.setAttribute('color', '#0f172a');
+        } else {
+          cardEl.setAttribute('position', `0 ${baseY[idx]} 0.02`);
+          borderEl.setAttribute('color', '#334155');
+          bgEl.setAttribute('color', '#1e293b');
+          numBgEl.setAttribute('color', '#334155');
+          numTxtEl.setAttribute('color', '#f8fafc');
+        }
+      });
+    }
+
+    function updateDesktopInterface() {
+      document.querySelectorAll('.stage-button').forEach(button => {
+        const code = button.dataset.stage;
+        button.classList.toggle('active', code === currentStage);
+        button.classList.toggle('done', completedStages.has(code));
+      });
+    }
+
+    function setFeedbackBanner(type, message) {
+      const borderEl = document.getElementById('vrFeedbackBorder');
+      const bgEl = document.getElementById('vrFeedbackBg');
+      const txtEl = document.getElementById('vrFeedbackText');
+
+      txtEl.setAttribute('value', message);
+
+      if (type === "success") {
+        borderEl.setAttribute('color', '#10b981');
+        bgEl.setAttribute('color', '#064e3b');
+        txtEl.setAttribute('color', '#a7f3d0');
+      } else if (type === "revise") {
+        borderEl.setAttribute('color', '#ef4444');
+        bgEl.setAttribute('color', '#7f1d1d');
+        txtEl.setAttribute('color', '#fecaca');
+      } else if (type === "info") {
+        borderEl.setAttribute('color', '#3b82f6');
+        bgEl.setAttribute('color', '#1e3a8a');
+        txtEl.setAttribute('color', '#bfdbfe');
+      } else {
+        borderEl.setAttribute('color', '#334155');
+        bgEl.setAttribute('color', '#0f172a');
+        txtEl.setAttribute('color', '#facc15');
+      }
+    }
+
+    function selectStage(stageCode) {
+      if (!stemScenarios[stageCode]) return;
+      currentStage = stageCode;
+      selectedOption = 1;
+      isLockedForRevise = false;
+      setFeedbackBanner("default", `Aktif di ${stemScenarios[stageCode].tag}. Pilih opsi jawaban, lalu tekan Konfirmasi.`);
+      addLog(`TAHAP -> ${stageCode}`);
+      renderVRScene();
+    }
+
+    function selectOptionManual(optNum) {
+      selectedOption = optNum;
+      if (isLockedForRevise) {
+        setFeedbackBanner("info", "Jawaban sebelumnya perlu direvisi. Tekan tombol Revisi sebelum mengonfirmasi pilihan baru.");
+      }
+      addLog(`PILIH -> Tahap ${currentStage}, Opsi ${selectedOption}`);
+      renderVRScene();
+    }
+
+    function stepOption(direction) {
+      if (direction > 0) {
+        selectedOption = (selectedOption % 4) + 1;
+      } else {
+        selectedOption = selectedOption === 1 ? 4 : selectedOption - 1;
+      }
+      if (isLockedForRevise) {
+        setFeedbackBanner("info", "Mode evaluasi: Tekan tombol Revisi terlebih dahulu sebelum Konfirmasi ulang.");
+      }
+      addLog(`NAVIGASI -> Opsi ${selectedOption}`);
+      renderVRScene();
+    }
+
+    function handleConfirmAction() {
+      totalAttempts++;
+      document.getElementById('vrTotalAttempt').setAttribute('value', String(totalAttempts));
+
+      const sc = stemScenarios[currentStage];
+      const isCorrect = (selectedOption === sc.correctIndex);
+
+      if (isCorrect) {
+        setFeedbackBanner("success", sc.successMsg);
+        completedStages.add(currentStage);
+        isLockedForRevise = false;
+      } else {
+        setFeedbackBanner("revise", sc.failMsg);
+        isLockedForRevise = true;
+      }
+
+      recordInteraction(currentStage, selectedOption, "KONFIRMASI", isCorrect ? "BENAR" : "SALAH");
+      updateGrowthMindsetProfile();
+      renderVRScene();
+    }
+
+    function handleReviseAction() {
+      totalRevises++;
+      isLockedForRevise = false;
+      document.getElementById('vrTotalRevise').setAttribute('value', String(totalRevises));
+
+      setFeedbackBanner("info", "Mode revisi aktif: Silakan pilih opsi jawaban yang lebih tepat, lalu tekan Konfirmasi.");
+      recordInteraction(currentStage, selectedOption, "REVISI", "PERBAIKAN");
+      updateGrowthMindsetProfile();
+      renderVRScene();
+    }
+
+    // ================= PEMERIKSAAN KONEKSI BLUETOOTH BERKALA =================
+    function applyConnectionVisual(state) {
+      const pill = document.getElementById('desktopStatus');
+      const deskText = document.getElementById('desktopStatusText');
+      const vrStatusEl = document.getElementById('vrConnectionStatus');
+      const vrStatusBg = document.getElementById('vrStatusBg');
+
+      if (state === "connected") {
+        if (pill) {
+          pill.classList.add('connected');
+          pill.classList.remove('disconnected');
+        }
+        if (deskText) deskText.textContent = 'BT Terhubung';
+        vrStatusEl.setAttribute('value', 'MVR Terhubung');
+        vrStatusBg.setAttribute('color', '#16a34a');
+      } else if (state === "disconnected") {
+        if (pill) {
+          pill.classList.remove('connected');
+          pill.classList.add('disconnected');
+        }
+        if (deskText) deskText.textContent = 'BT Terputus';
+        vrStatusEl.setAttribute('value', 'Koneksi Terputus');
+        vrStatusBg.setAttribute('color', '#dc2626');
+      } else {
+        if (pill) {
+          pill.classList.remove('connected', 'disconnected');
+        }
+        if (deskText) deskText.textContent = 'Menunggu BT...';
+        vrStatusEl.setAttribute('value', 'Menunggu Koneksi');
+        vrStatusBg.setAttribute('color', '#334155');
+      }
+    }
+
+    function registerBluetoothHeartbeat() {
+      lastBtHeartbeat = Date.now();
+      if (btConnectionState !== "connected") {
+        btConnectionState = "connected";
+        applyConnectionVisual("connected");
+        addLog("BT -> Kontroler MVR terhubung.");
+      }
+    }
+
+    function checkBluetoothConnection() {
+      const now = Date.now();
+      const isHeartbeatAlive = (lastBtHeartbeat > 0) && ((now - lastBtHeartbeat) <= BT_TIMEOUT_MS);
+
+      if (isHeartbeatAlive) {
+        if (btConnectionState !== "connected") {
+          btConnectionState = "connected";
+          applyConnectionVisual("connected");
+          addLog("BT -> Kontroler MVR terhubung.");
+        }
+      } else if (lastBtHeartbeat > 0) {
+        if (btConnectionState !== "disconnected") {
+          btConnectionState = "disconnected";
+          applyConnectionVisual("disconnected");
+          addLog("BT -> Sinyal kontroler terputus.");
+        }
+      } else {
+        applyConnectionVisual("waiting");
+      }
+    }
+
+    function updateGrowthMindsetProfile() {
+      const gmEl = document.getElementById('vrGmProfile');
+      if (totalRevises > 0 && completedStages.size >= 2) {
+        gmEl.setAttribute('value', "Growth Mindset");
+        gmEl.setAttribute('color', "#34d399");
+      } else if (totalRevises > 0) {
+        gmEl.setAttribute('value', "Proses Revisi");
+        gmEl.setAttribute('color', "#38bdf8");
+      } else if (completedStages.size === 5) {
+        gmEl.setAttribute('value', "Sangat Baik");
+        gmEl.setAttribute('color', "#a78bfa");
+      }
+    }
+
+    function recordInteraction(stage, option, action, status) {
+      const entry = {
+        waktu_lokal: new Date().toLocaleTimeString(),
+        timestamp_ms: Date.now(),
+        kode_tahap: stage,
+        pilihan_opsi: option,
+        aksi: action,
+        status_evaluasi: status,
+        kumulatif_attempt: totalAttempts,
+        kumulatif_revise: totalRevises
+      };
+      interactionHistory.push(entry);
+      addLog(`${action} | ${stage} | Opsi ${option} (${status})`);
+    }
+
+    function addLog(msg) {
+      const timestamp = new Date().toLocaleTimeString();
+      logLines.unshift(`[${timestamp}] ${msg}`);
+      if (logLines.length > 10) logLines.pop();
+      document.getElementById('vrLogBox').setAttribute('value', logLines.join("\n"));
+    }
+
+    function exportCSV() {
+      if (interactionHistory.length === 0) {
+        setFeedbackBanner("info", "Belum ada data interaksi yang terekam untuk disimpan.");
+        return;
+      }
+      const headers = Object.keys(interactionHistory[0]).join(",");
+      const rows = interactionHistory.map(obj => Object.values(obj).join(","));
+      const csvContent = "data:text/csv;charset=utf-8," + [headers, ...rows].join("\n");
+
+      const link = document.createElement("a");
+      link.setAttribute("href", encodeURI(csvContent));
+      link.setAttribute("download", "profil_pembelajaran_stem_dt_vr.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      addLog("Catatan interaksi berhasil disimpan.");
+    }
+
+    // ================= PENERIMA SINYAL DARI ESP32 BLE HID & KEYBOARD =================
+    window.addEventListener('keydown', (e) => {
+      if (e.repeat) return;
+      const key = e.key.toLowerCase();
+
+      if (key === 't') {
+        e.preventDefault();
+        registerBluetoothHeartbeat();
+        return;
+      }
+
+      if (key >= '1' && key <= '5') {
+        e.preventDefault();
+        registerBluetoothHeartbeat();
+        selectStage(stageOrder[parseInt(key, 10) - 1]);
+      } else if (key === 'r' || key === '*') {
+        e.preventDefault();
+        registerBluetoothHeartbeat();
+        handleReviseAction();
+      } else if (key === 'k' || key === 'enter' || key === '#') {
+        e.preventDefault();
+        registerBluetoothHeartbeat();
+        handleConfirmAction();
+      } else if (key === 'n' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        registerBluetoothHeartbeat();
+        stepOption(1);
+      } else if (key === 'p' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        registerBluetoothHeartbeat();
+        stepOption(-1);
+      } else if (key === 's') {
+        e.preventDefault();
+        registerBluetoothHeartbeat();
+        addLog(`SINKRON -> Tahap ${currentStage}, Opsi ${selectedOption}`);
+      }
+    });
+
+    renderVRScene();
+    checkBluetoothConnection();
+    setInterval(checkBluetoothConnection, 2500);
+
+    const vrScene = document.querySelector('a-scene');
+    vrScene.addEventListener('enter-vr', () => {
+      document.getElementById('desktopUi').style.display = 'none';
+    });
+    vrScene.addEventListener('exit-vr', () => {
+      document.getElementById('desktopUi').style.display = '';
+    });
+  </script>
+</body>
+</html>
