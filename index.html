@@ -313,8 +313,9 @@
   </div>
 
   <a-scene background="color: #0f172a">
-    <a-light type="ambient" color="#ffffff" intensity="1.0"></a-light>
-    <a-light type="directional" position="-2 4 2" intensity="0.7"></a-light>
+    <a-light type="ambient" color="#ffffff" intensity="0.9"></a-light>
+    <a-light type="directional" position="-2 5 3" intensity="0.85"></a-light>
+    <a-light type="point" position="-3.6 2.2 -2.0" color="#38bdf8" intensity="0.6" distance="6"></a-light>
     <a-sky color="#0f172a"></a-sky>
 
     <a-plane rotation="-90 0 0" width="24" height="24" color="#0b1120" position="0 0 0"></a-plane>
@@ -323,7 +324,187 @@
       <a-ring radius-inner="3.9" radius-outer="3.93" color="#1e293b"></a-ring>
     </a-entity>
 
-    <!-- ================= PANEL UTAMA MVR 3D (KIRI-TENGAH) ================= -->
+    <!-- ================= DIORAMA 3D EKOSISTEM SUNGAI DINAMIS (KIRI) ================= -->
+    <a-entity id="riverDiorama" position="-3.80 0.92 -2.15" rotation="0 52 0">
+      <!-- Meja / Alas Diorama -->
+      <a-box width="2.76" height="0.14" depth="1.66" position="0 -0.07 0" color="#1e293b"></a-box>
+      <a-box width="2.80" height="0.03" depth="1.70" position="0 0.01 0" color="#38bdf8" material="shader: flat;"></a-box>
+      <!-- Kaki Penyangga Meja Diorama -->
+      <a-cylinder radius="0.06" height="0.78" position="-1.15 -0.53 -0.62" color="#334155"></a-cylinder>
+      <a-cylinder radius="0.06" height="0.78" position="1.15 -0.53 -0.62" color="#334155"></a-cylinder>
+      <a-cylinder radius="0.06" height="0.78" position="-1.15 -0.53 0.62" color="#334155"></a-cylinder>
+      <a-cylinder radius="0.06" height="0.78" position="1.15 -0.53 0.62" color="#334155"></a-cylinder>
+
+      <!-- Papan Status Ekosistem di Bagian Belakang Diorama -->
+      <a-entity position="0 1.24 -0.76">
+        <a-plane width="2.36" height="0.44" color="#334155" material="shader: flat;" position="0 0 -0.01"></a-plane>
+        <a-plane width="2.32" height="0.40" color="#0f172a" material="shader: flat;" position="0 0 0"></a-plane>
+        <a-text value="DIORAMA 3D EKOSISTEM SUNGAI" align="center" position="0 0.11 0.02" color="#38bdf8" width="2.1" wrap-count="36" font-weight="bold"></a-text>
+        <a-plane id="dioramaStatusBg" width="2.14" height="0.16" color="#dc2626" material="shader: flat;" position="0 -0.07 0.01"></a-plane>
+        <a-text id="dioramaStatusText" value="TERCEMAR LIMBAH | DO: 2.4 mg/L" align="center" position="0 -0.07 0.02" color="#ffffff" width="1.95" wrap-count="38"></a-text>
+      </a-entity>
+
+      <!-- Penampang Tanah Dasar Sungai -->
+      <a-box width="2.62" height="0.24" depth="1.52" position="0 0.14 0" color="#451a03"></a-box>
+      <!-- Dasar Kerikil Sungai -->
+      <a-box width="1.12" height="0.05" depth="1.52" position="0 0.28 0" color="#57534e"></a-box>
+      <a-dodecahedron radius="0.055" position="-0.32 0.31 -0.45" color="#78716c"></a-dodecahedron>
+      <a-dodecahedron radius="0.045" position="0.28 0.30 -0.32" color="#a8a29e"></a-dodecahedron>
+      <a-dodecahedron radius="0.06" position="-0.22 0.31 0.42" color="#78716c"></a-dodecahedron>
+      <a-dodecahedron radius="0.05" position="0.34 0.30 0.52" color="#78716c"></a-dodecahedron>
+
+      <!-- Bantaran Sungai Kiri -->
+      <a-box width="0.76" height="0.32" depth="1.52" position="-0.93 0.41 0" color="#78350f"></a-box>
+      <a-box width="0.78" height="0.05" depth="1.54" position="-0.92 0.58 0" color="#15803d"></a-box>
+
+      <!-- Bantaran Sungai Kanan -->
+      <a-box width="0.76" height="0.32" depth="1.52" position="0.93 0.41 0" color="#78350f"></a-box>
+      <a-box width="0.78" height="0.05" depth="1.54" position="0.92 0.58 0" color="#15803d"></a-box>
+
+      <!-- Vegetasi & Pepohonan Bantaran Sungai -->
+      <a-entity position="-1.05 0.60 -0.48">
+        <a-cylinder radius="0.03" height="0.22" position="0 0.11 0" color="#713f12"></a-cylinder>
+        <a-cone radius-bottom="0.16" radius-top="0.01" height="0.28" position="0 0.30 0" color="#16a34a"></a-cone>
+        <a-cone radius-bottom="0.12" radius-top="0.01" height="0.22" position="0 0.42 0" color="#22c55e"></a-cone>
+      </a-entity>
+      <a-entity position="1.06 0.60 -0.42">
+        <a-cylinder radius="0.03" height="0.24" position="0 0.12 0" color="#713f12"></a-cylinder>
+        <a-cone radius-bottom="0.17" radius-top="0.01" height="0.30" position="0 0.32 0" color="#15803d"></a-cone>
+        <a-cone radius-bottom="0.12" radius-top="0.01" height="0.22" position="0 0.45 0" color="#22c55e"></a-cone>
+      </a-entity>
+      <a-entity position="-1.02 0.60 0.48">
+        <a-cylinder radius="0.025" height="0.18" position="0 0.09 0" color="#713f12"></a-cylinder>
+        <a-sphere radius="0.14" position="0 0.24 0" color="#16a34a"></a-sphere>
+      </a-entity>
+      <!-- Tanaman Air / Alang-alang Tepi -->
+      <a-cone radius-bottom="0.025" radius-top="0.002" height="0.22" position="0.58 0.66 -0.18" rotation="0 0 8" color="#4ade80"></a-cone>
+      <a-cone radius-bottom="0.025" radius-top="0.002" height="0.19" position="0.61 0.65 -0.12" rotation="0 0 -10" color="#22c55e"></a-cone>
+      <a-cone radius-bottom="0.025" radius-top="0.002" height="0.21" position="-0.58 0.66 0.25" rotation="0 0 -8" color="#4ade80"></a-cone>
+
+      <!-- Volume Air Sungai Dinamis -->
+      <a-box id="riverWater" width="1.10" height="0.23" depth="1.50" position="0 0.415 0"
+             material="color: #525829; opacity: 0.78; transparent: true;"></a-box>
+      <a-plane id="riverSurface" width="1.10" height="1.50" rotation="-90 0 0" position="0 0.531 0"
+               material="color: #656d33; opacity: 0.45; transparent: true;"></a-plane>
+
+      <!-- Pipa Limbah & Busa Pencemar (Aktif saat tercemar) -->
+      <a-entity id="pollutionGroup">
+        <a-cylinder radius="0.045" height="0.28" position="-0.62 0.56 -0.46" rotation="0 0 90" color="#475569"></a-cylinder>
+        <a-torus radius="0.048" radius-tubular="0.008" position="-0.48 0.56 -0.46" rotation="0 90 0" color="#334155"></a-torus>
+        <!-- Aliran Limbah dari Pipa -->
+        <a-cylinder id="sludgeStream" radius="0.028" height="0.16" position="-0.45 0.50 -0.46" rotation="0 0 25"
+                    material="color: #3f3f1c; opacity: 0.88; transparent: true;"></a-cylinder>
+        <!-- Lapisan Busa Limbah di Permukaan -->
+        <a-entity id="foamClusters">
+          <a-sphere radius="0.045" scale="1.6 0.35 1.3" position="-0.32 0.535 -0.42" color="#fef08a"></a-sphere>
+          <a-sphere radius="0.038" scale="1.4 0.35 1.2" position="-0.22 0.535 -0.35" color="#ecfccb"></a-sphere>
+          <a-sphere radius="0.05" scale="1.8 0.35 1.4" position="-0.10 0.535 -0.18" color="#fef08a"></a-sphere>
+          <a-sphere radius="0.04" scale="1.5 0.35 1.3" position="0.14 0.535 0.05" color="#ecfccb"></a-sphere>
+          <a-sphere radius="0.048" scale="1.7 0.35 1.2" position="-0.18 0.535 0.32" color="#fef08a"></a-sphere>
+          <a-sphere radius="0.035" scale="1.4 0.35 1.2" position="0.22 0.535 0.44" color="#ecfccb"></a-sphere>
+        </a-entity>
+      </a-entity>
+
+      <!-- Unit Bio-Filter Bertingkat (Muncul saat IP / PC / TI) -->
+      <a-entity id="bioFilterGroup" position="0 0 -0.14" visible="false">
+        <!-- Rangka Penahan Filter -->
+        <a-box width="0.04" height="0.30" depth="0.20" position="-0.52 0.44 0" color="#cbd5e1"></a-box>
+        <a-box width="0.04" height="0.30" depth="0.20" position="0.52 0.44 0" color="#cbd5e1"></a-box>
+        <a-box width="1.08" height="0.02" depth="0.20" position="0 0.58 0" color="#38bdf8"></a-box>
+
+        <!-- Lapis 1: Kerikil & Pasir Silika -->
+        <a-box id="filterLayer1" width="1.00" height="0.065" depth="0.17" position="0 0.34 0"
+               material="color: #94a3b8; opacity: 0.92; transparent: true;"></a-box>
+        <!-- Lapis 2: Arang Aktif (Activated Carbon) -->
+        <a-box id="filterLayer2" width="1.00" height="0.065" depth="0.17" position="0 0.415 0"
+               material="color: #1e293b; opacity: 0.94; transparent: true;"></a-box>
+        <!-- Lapis 3: Batu Zeolit & Bio-Media -->
+        <a-box id="filterLayer3" width="1.00" height="0.065" depth="0.17" position="0 0.49 0"
+               material="color: #7dd3fc; opacity: 0.90; transparent: true;"></a-box>
+      </a-entity>
+
+      <!-- Unit Aerator & Gelembung Oksigen -->
+      <a-entity id="aeratorGroup" position="0 0 0.24" visible="false">
+        <!-- Mesin Kompresor Aerator di Bantaran Kanan -->
+        <a-box width="0.22" height="0.16" depth="0.18" position="0.82 0.68 0" color="#0284c7"></a-box>
+        <a-box width="0.16" height="0.06" depth="0.19" position="0.82 0.71 0" color="#38bdf8"></a-box>
+        <!-- Pipa Selang Udara ke Dasar Sungai -->
+        <a-cylinder radius="0.012" height="0.36" position="0.62 0.55 0" rotation="0 0 48" color="#e0f2fe"></a-cylinder>
+        <!-- Diffuser Aerator di Dasar Sungai -->
+        <a-cylinder radius="0.018" height="0.72" position="0 0.315 0" rotation="0 0 90" color="#38bdf8"></a-cylinder>
+
+        <!-- Aliran Gelembung Kiri (Aktif >= 20%) -->
+        <a-entity id="bubbleStream1" position="-0.24 0 0">
+          <a-sphere radius="0.016" position="0 0.33 0" color="#e0f2fe"
+                    animation="property: position; from: 0 0.33 0; to: 0 0.52 0; dur: 1100; loop: true; easing: linear"></a-sphere>
+          <a-sphere radius="0.012" position="0.03 0.33 0.02" color="#ffffff"
+                    animation="property: position; from: 0.03 0.33 0.02; to: 0.03 0.52 0.02; dur: 1350; delay: 350; loop: true; easing: linear"></a-sphere>
+        </a-entity>
+
+        <!-- Aliran Gelembung Tengah (Aktif >= 50%) -->
+        <a-entity id="bubbleStream2" position="0 0 0">
+          <a-sphere radius="0.018" position="0 0.33 0" color="#e0f2fe"
+                    animation="property: position; from: 0 0.33 0; to: 0 0.52 0; dur: 950; loop: true; easing: linear"></a-sphere>
+          <a-sphere radius="0.013" position="-0.03 0.33 -0.02" color="#ffffff"
+                    animation="property: position; from: -0.03 0.33 -0.02; to: -0.03 0.52 -0.02; dur: 1200; delay: 400; loop: true; easing: linear"></a-sphere>
+        </a-entity>
+
+        <!-- Aliran Gelembung Kanan (Aktif >= 80%) -->
+        <a-entity id="bubbleStream3" position="0.24 0 0">
+          <a-sphere radius="0.016" position="0 0.33 0" color="#e0f2fe"
+                    animation="property: position; from: 0 0.33 0; to: 0 0.52 0; dur: 1050; loop: true; easing: linear"></a-sphere>
+          <a-sphere radius="0.012" position="0.02 0.33 -0.02" color="#ffffff"
+                    animation="property: position; from: 0.02 0.33 -0.02; to: 0.02 0.52 -0.02; dur: 1300; delay: 300; loop: true; easing: linear"></a-sphere>
+        </a-entity>
+      </a-entity>
+
+      <!-- Populasi Ikan Sungai Dinamis -->
+      <a-entity id="fishGroup">
+        <!-- Ikan 1 (Selalu ada; pucat & lambat di permukaan saat tercemar, cerah saat pulih) -->
+        <a-entity id="fish-1" position="-0.22 0.49 -0.30"
+                  animation="property: position; from: -0.26 0.49 -0.32; to: -0.14 0.49 -0.26; dir: alternate; dur: 3200; loop: true; easing: easeInOutSine">
+          <a-sphere id="fishBody-1" radius="0.038" scale="1.6 0.85 0.65" color="#9ca3af"></a-sphere>
+          <a-cone id="fishTail-1" radius-bottom="0.028" radius-top="0.002" height="0.045" position="-0.065 0 0" rotation="0 0 90" color="#9ca3af"></a-cone>
+        </a-entity>
+
+        <!-- Ikan 2 -->
+        <a-entity id="fish-2" position="0.18 0.48 0.36"
+                  animation="property: position; from: 0.22 0.48 0.34; to: 0.10 0.48 0.42; dir: alternate; dur: 3500; loop: true; easing: easeInOutSine">
+          <a-sphere id="fishBody-2" radius="0.036" scale="1.6 0.85 0.65" color="#9ca3af"></a-sphere>
+          <a-cone id="fishTail-2" radius-bottom="0.026" radius-top="0.002" height="0.042" position="0.062 0 0" rotation="0 0 -90" color="#9ca3af"></a-cone>
+        </a-entity>
+
+        <!-- Ikan 3 (Muncul saat air membaik / pulih) -->
+        <a-entity id="fish-3" position="-0.28 0.39 0.04" visible="false"
+                  animation="property: position; from: -0.36 0.38 -0.02; to: 0.34 0.43 0.10; dir: alternate; dur: 2400; loop: true; easing: easeInOutSine">
+          <a-sphere radius="0.04" scale="1.7 0.9 0.65" color="#fb923c"></a-sphere>
+          <a-cone radius-bottom="0.03" radius-top="0.002" height="0.048" position="-0.07 0 0" rotation="0 0 90" color="#f97316"></a-cone>
+        </a-entity>
+
+        <!-- Ikan 4 -->
+        <a-entity id="fish-4" position="0.30 0.37 0.48" visible="false"
+                  animation="property: position; from: 0.38 0.36 0.46; to: -0.34 0.41 0.56; dir: alternate; dur: 2600; loop: true; easing: easeInOutSine">
+          <a-sphere radius="0.038" scale="1.7 0.9 0.65" color="#38bdf8"></a-sphere>
+          <a-cone radius-bottom="0.028" radius-top="0.002" height="0.045" position="0.068 0 0" rotation="0 0 -90" color="#0284c7"></a-cone>
+        </a-entity>
+
+        <!-- Ikan 5 -->
+        <a-entity id="fish-5" position="-0.15 0.36 -0.48" visible="false"
+                  animation="property: position; from: -0.32 0.36 -0.54; to: 0.32 0.40 -0.38; dir: alternate; dur: 2200; loop: true; easing: easeInOutSine">
+          <a-sphere radius="0.035" scale="1.7 0.9 0.65" color="#facc15"></a-sphere>
+          <a-cone radius-bottom="0.026" radius-top="0.002" height="0.042" position="-0.064 0 0" rotation="0 0 90" color="#eab308"></a-cone>
+        </a-entity>
+
+        <!-- Ikan 6 -->
+        <a-entity id="fish-6" position="0.10 0.42 0.14" visible="false"
+                  animation="property: position; from: 0.35 0.44 0.14; to: -0.35 0.38 0.18; dir: alternate; dur: 2100; loop: true; easing: easeInOutSine">
+          <a-sphere radius="0.036" scale="1.7 0.9 0.65" color="#fb923c"></a-sphere>
+          <a-cone radius-bottom="0.027" radius-top="0.002" height="0.043" position="0.065 0 0" rotation="0 0 -90" color="#ea580c"></a-cone>
+        </a-entity>
+      </a-entity>
+    </a-entity>
+
+    <!-- ================= PANEL UTAMA MVR 3D (TENGAH) ================= -->
     <a-entity id="mainPanel" position="-0.75 1.58 -3.65">
       <a-plane width="4.44" height="3.18" color="#334155" material="shader: flat;" position="0 0 -0.01"></a-plane>
       <a-plane width="4.40" height="3.14" color="#0f172a" material="shader: flat;" position="0 0 0"></a-plane>
@@ -488,7 +669,7 @@
       "EA": {
         tag: "TAHAP 1 (EA) - MENGAMATI FENOMENA & MERUMUSKAN PERTANYAAN",
         title: "Bukti fenomena apa yang paling relevan menjelaskan menurunnya populasi ikan di sungai ini?",
-        desc: "Amati kondisi lingkungan sungai di depan Anda, pilih bukti pengamatan yang paling tepat, lalu tekan Konfirmasi.",
+        desc: "Amati diorama sungai di sisi kiri Anda, pilih bukti pengamatan yang paling tepat, lalu tekan Konfirmasi.",
         options: [
           "1. Air sungai tampak keruh dengan lapisan busa limbah dan kadar oksigen terlarut rendah.",
           "2. Terdapat beberapa bebatuan besar di tepi sungai yang terkena sinar matahari.",
@@ -502,7 +683,7 @@
       "DI": {
         tag: "TAHAP 2 (DI) - MENETAPKAN MASALAH UTAMA & IDE AWAL SOLUSI",
         title: "Apa rumusan masalah utama yang harus segera diselesaikan pada ekosistem sungai tersebut?",
-        desc: "Berdasarkan bukti pada tahap sebelumnya, tentukan akar masalah ekosistem dan arah solusi awalnya.",
+        desc: "Berdasarkan bukti pada diorama, tentukan akar masalah ekosistem dan arah solusi awalnya.",
         options: [
           "1. Kekurangan cahaya matahari akibat terlalu banyak tanaman air di permukaan.",
           "2. Eutrofikasi dan penurunan kadar oksigen akibat pembuangan limbah organik tanpa filtrasi.",
@@ -516,7 +697,7 @@
       "IP": {
         tag: "TAHAP 3 (IP) - MENGEMBANGKAN IDE & MENYUSUN RENCANA PERCOBAAN",
         title: "Rencana desain solusi manakah yang paling efektif untuk memulihkan kualitas air sungai?",
-        desc: "Pilih rancangan sistem pemulihan ekosistem yang akan diuji pada simulasi.",
+        desc: "Pilih rancangan sistem pemulihan ekosistem yang akan dipasang pada diorama sungai.",
         options: [
           "1. Menutup seluruh permukaan sungai dengan terpal plastik agar tidak terkena hujan.",
           "2. Menambahkan bahan kimia kaporit secara langsung ke dalam aliran sungai.",
@@ -524,13 +705,13 @@
           "4. Memindahkan seluruh ikan ke kolam beton tanpa memperbaiki kualitas air sungai."
         ],
         correctIndex: 3,
-        successMsg: "RENCANA DISETUJUI! Bio-filter dan aerator siap diuji. Silakan lanjut ke Tahap 4 (PC).",
+        successMsg: "RENCANA DISETUJUI! Unit bio-filter dan aerator kini terpasang di sungai. Lanjut ke Tahap 4 (PC).",
         failMsg: "RENCANA BERISIKO! Solusi tersebut justru merusak keseimbangan biotik. Tekan Revisi untuk menyusun ulang rencana."
       },
       "PC": {
         tag: "TAHAP 4 (PC) - MEMBUAT MODEL VIRTUAL & MENJALANKAN SIMULASI",
         title: "Atur parameter aerasi dan ketebalan media bio-filter pada prototipe virtual:",
-        desc: "Pilih rasio kapasitas prototipe yang paling seimbang, lalu tekan Konfirmasi untuk menjalankan simulasi.",
+        desc: "Putar rotary untuk melihat perubahan lapisan filter di diorama, lalu tekan Konfirmasi.",
         options: [
           "1. Konfigurasi Rendah: 1 Lapis Filter + Aerasi 20% (Hemat energi, filtrasi lambat)",
           "2. Konfigurasi Sedang: 2 Lapis Filter + Aerasi 50% (Filtrasi parsial)",
@@ -538,13 +719,13 @@
           "4. Konfigurasi Ekstrem: Tanpa Filter + Aerasi 100% (Arus terlalu turbulen)"
         ],
         correctIndex: 3,
-        successMsg: "SIMULASI BERHASIL! Prototipe menunjukkan peningkatan kualitas air. Lanjut ke Tahap 5 (TI).",
+        successMsg: "SIMULASI BERHASIL! Air sungai kembali jernih dan ikan berenang aktif. Lanjut ke Tahap 5 (TI).",
         failMsg: "HASIL BELUM OPTIMAL! Parameter ini belum mampu menormalkan kadar oksigen. Tekan Revisi untuk mengatur ulang."
       },
       "TI": {
         tag: "TAHAP 5 (TI) - MENGUJI HASIL, MENILAI EFEKTIVITAS & REVISI",
-        title: "Berdasarkan grafik hasil uji simulasi (Oksigen naik ke 7.2 mg/L), apa kesimpulan akhir Anda?",
-        desc: "Evaluasi efektivitas prototipe bio-filter & aerator berdasarkan data sensor kualitas air.",
+        title: "Berdasarkan hasil uji diorama & sensor (Oksigen naik ke 7.2 mg/L), apa kesimpulan akhir Anda?",
+        desc: "Evaluasi efektivitas prototipe bio-filter & aerator berdasarkan kondisi ekosistem sungai yang pulih.",
         options: [
           "1. Solusi efektif memulihkan ekosistem; siap diterapkan dengan pemantauan berkala.",
           "2. Solusi gagal total karena kadar oksigen terlalu tinggi bagi ikan air tawar.",
@@ -571,9 +752,189 @@
     let btConnectionState = "waiting"; // "waiting" | "connected" | "disconnected"
     const BT_TIMEOUT_MS = 6000;
 
+    // ================= PEMBARUAN VISUAL DIORAMA 3D EKOSISTEM SUNGAI =================
+    function setDioramaVisualState({
+      waterColor,
+      surfaceColor,
+      foamVisible,
+      sludgeVisible,
+      filterLayers,
+      aeratorLevel,
+      healthyFish,
+      statusText,
+      statusColor
+    }) {
+      const waterEl = document.getElementById('riverWater');
+      const surfaceEl = document.getElementById('riverSurface');
+      const foamEl = document.getElementById('foamClusters');
+      const sludgeEl = document.getElementById('sludgeStream');
+      const bioFilterEl = document.getElementById('bioFilterGroup');
+      const l1 = document.getElementById('filterLayer1');
+      const l2 = document.getElementById('filterLayer2');
+      const l3 = document.getElementById('filterLayer3');
+      const aeratorEl = document.getElementById('aeratorGroup');
+      const b1 = document.getElementById('bubbleStream1');
+      const b2 = document.getElementById('bubbleStream2');
+      const b3 = document.getElementById('bubbleStream3');
+      const statusBgEl = document.getElementById('dioramaStatusBg');
+      const statusTxtEl = document.getElementById('dioramaStatusText');
+
+      waterEl.setAttribute('material', `color: ${waterColor}; opacity: 0.78; transparent: true;`);
+      surfaceEl.setAttribute('material', `color: ${surfaceColor}; opacity: 0.45; transparent: true;`);
+      foamEl.setAttribute('visible', foamVisible);
+      sludgeEl.setAttribute('visible', sludgeVisible);
+
+      // Pengaturan lapisan Bio-Filter
+      bioFilterEl.setAttribute('visible', filterLayers > 0);
+      l1.setAttribute('visible', filterLayers >= 1);
+      l2.setAttribute('visible', filterLayers >= 2);
+      l3.setAttribute('visible', filterLayers >= 3);
+
+      // Pengaturan Aerator & Gelembung Oksigen
+      aeratorEl.setAttribute('visible', aeratorLevel > 0);
+      b1.setAttribute('visible', aeratorLevel >= 1);
+      b2.setAttribute('visible', aeratorLevel >= 2);
+      b3.setAttribute('visible', aeratorLevel >= 3);
+
+      // Pengaturan Populasi & Kesehatan Ikan
+      const fBody1 = document.getElementById('fishBody-1');
+      const fTail1 = document.getElementById('fishTail-1');
+      const fBody2 = document.getElementById('fishBody-2');
+      const fTail2 = document.getElementById('fishTail-2');
+
+      if (healthyFish) {
+        fBody1.setAttribute('color', '#fb923c');
+        fTail1.setAttribute('color', '#ea580c');
+        fBody2.setAttribute('color', '#38bdf8');
+        fTail2.setAttribute('color', '#0284c7');
+        document.getElementById('fish-3').setAttribute('visible', true);
+        document.getElementById('fish-4').setAttribute('visible', true);
+        document.getElementById('fish-5').setAttribute('visible', true);
+        document.getElementById('fish-6').setAttribute('visible', true);
+      } else {
+        fBody1.setAttribute('color', '#9ca3af');
+        fTail1.setAttribute('color', '#6b7280');
+        fBody2.setAttribute('color', '#9ca3af');
+        fTail2.setAttribute('color', '#6b7280');
+        document.getElementById('fish-3').setAttribute('visible', false);
+        document.getElementById('fish-4').setAttribute('visible', false);
+        document.getElementById('fish-5').setAttribute('visible', false);
+        document.getElementById('fish-6').setAttribute('visible', false);
+      }
+
+      statusBgEl.setAttribute('color', statusColor);
+      statusTxtEl.setAttribute('value', statusText);
+    }
+
+    function updateRiverDiorama() {
+      const isPcOrTiDone = completedStages.has("PC") || completedStages.has("TI");
+      const isIpDone = completedStages.has("IP");
+
+      // 1. Jika Tahap PC (atau TI) sudah tuntas -> kondisi ekosistem pulih optimal
+      if (isPcOrTiDone && currentStage !== "PC") {
+        setDioramaVisualState({
+          waterColor: '#0284c7',
+          surfaceColor: '#38bdf8',
+          foamVisible: false,
+          sludgeVisible: false,
+          filterLayers: 3,
+          aeratorLevel: 3,
+          healthyFish: true,
+          statusText: 'EKOSISTEM PULIH | DO: 7.2 mg/L',
+          statusColor: '#16a34a'
+        });
+        return;
+      }
+
+      // 2. Saat siswa berada di Tahap PC -> pratinjau langsung sesuai opsi rotary (1-4)
+      if (currentStage === "PC") {
+        if (selectedOption === 1) {
+          setDioramaVisualState({
+            waterColor: '#3b6e5c',
+            surfaceColor: '#4d8b74',
+            foamVisible: true,
+            sludgeVisible: false,
+            filterLayers: 1,
+            aeratorLevel: 1,
+            healthyFish: false,
+            statusText: 'PROTOTIPE 1: FILTER 1 LAPIS | DO: 4.8 mg/L',
+            statusColor: '#d97706'
+          });
+        } else if (selectedOption === 2) {
+          setDioramaVisualState({
+            waterColor: '#157a8c',
+            surfaceColor: '#22a6b3',
+            foamVisible: false,
+            sludgeVisible: false,
+            filterLayers: 2,
+            aeratorLevel: 2,
+            healthyFish: false,
+            statusText: 'PROTOTIPE 2: FILTER 2 LAPIS | DO: 5.8 mg/L',
+            statusColor: '#0284c7'
+          });
+        } else if (selectedOption === 3) {
+          setDioramaVisualState({
+            waterColor: '#0284c7',
+            surfaceColor: '#38bdf8',
+            foamVisible: false,
+            sludgeVisible: false,
+            filterLayers: 3,
+            aeratorLevel: 3,
+            healthyFish: true,
+            statusText: 'PROTOTIPE 3 (OPTIMAL) | DO: 7.2 mg/L',
+            statusColor: '#16a34a'
+          });
+        } else {
+          setDioramaVisualState({
+            waterColor: '#4d6344',
+            surfaceColor: '#658058',
+            foamVisible: true,
+            sludgeVisible: true,
+            filterLayers: 0,
+            aeratorLevel: 3,
+            healthyFish: false,
+            statusText: 'PROTOTIPE 4: TANPA FILTER (TURBULEN)',
+            statusColor: '#dc2626'
+          });
+        }
+        return;
+      }
+
+      // 3. Jika Tahap IP sudah dikonfirmasi -> instalasi awal unit bio-filter & aerator muncul
+      if (isIpDone) {
+        setDioramaVisualState({
+          waterColor: '#1e6f78',
+          surfaceColor: '#2a9d8f',
+          foamVisible: false,
+          sludgeVisible: false,
+          filterLayers: 2,
+          aeratorLevel: 1,
+          healthyFish: false,
+          statusText: 'UNIT FILTER TERPASANG | DO: 4.5 mg/L',
+          statusColor: '#0284c7'
+        });
+        return;
+      }
+
+      // 4. Kondisi awal (Tahap EA / DI) -> sungai tercemar limbah
+      setDioramaVisualState({
+        waterColor: '#525829',
+        surfaceColor: '#656d33',
+        foamVisible: true,
+        sludgeVisible: true,
+        filterLayers: 0,
+        aeratorLevel: 0,
+        healthyFish: false,
+        statusText: 'TERCEMAR LIMBAH | DO: 2.4 mg/L',
+        statusColor: '#dc2626'
+      });
+    }
+
     function renderVRScene() {
       const sc = stemScenarios[currentStage];
       updateDesktopInterface();
+      updateRiverDiorama();
+
       document.getElementById('vrSceneTag').setAttribute('value', sc.tag);
       document.getElementById('vrQuestionTitle').setAttribute('value', sc.title);
       document.getElementById('vrQuestionDesc').setAttribute('value', sc.desc);
