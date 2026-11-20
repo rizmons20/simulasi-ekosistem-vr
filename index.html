@@ -343,10 +343,10 @@
     </aside>
   </div>
 
-  <a-scene fog="type: exponential; color: #7c8b99; density: 0.018">
+  <a-scene fog="type: exponential; color: #7c8b99; density: 0.015">
     <!-- Pencahayaan Alam Terbuka -->
     <a-light type="ambient" color="#e2e8f0" intensity="0.85"></a-light>
-    <a-light type="directional" position="-6 12 8" color="#fffbeb" intensity="0.95"></a-light>
+    <a-light type="directional" position="-6 12 8" color="#fffbeb" intensity="0.90"></a-light>
     <a-light type="hemisphere" color="#bae6fd" groundColor="#3f6212" intensity="0.45"></a-light>
 
     <!-- Langit & Horizon Dinamis -->
@@ -362,17 +362,18 @@
         <a-cylinder radius="0.09" height="1.2" position="0.3 -0.45 -1.8" color="#451a03"></a-cylinder>
         <a-cylinder radius="0.09" height="1.2" position="3.7 -0.45 -1.8" color="#451a03"></a-cylinder>
 
-        <a-cylinder radius="0.04" height="0.88" position="-3.1 0.46 -1.82" color="#92400e"></a-cylinder>
-        <a-cylinder radius="0.04" height="0.88" position="-1.5 0.46 -1.82" color="#92400e"></a-cylinder>
-        <a-box width="1.72" height="0.05" depth="0.06" position="-2.3 0.88 -1.82" color="#b45309"></a-box>
+        <!-- Pagar Pembatas Sisi Kiri Jauh & Kanan Jauh (Tengah terbuka ke sungai) -->
+        <a-cylinder radius="0.04" height="0.82" position="-3.1 0.43 -1.82" color="#92400e"></a-cylinder>
+        <a-cylinder radius="0.04" height="0.82" position="-1.8 0.43 -1.82" color="#92400e"></a-cylinder>
+        <a-box width="1.42" height="0.05" depth="0.06" position="-2.45 0.82 -1.82" color="#b45309"></a-box>
 
-        <a-cylinder radius="0.04" height="0.88" position="2.1 0.46 -1.82" color="#92400e"></a-cylinder>
-        <a-cylinder radius="0.04" height="0.88" position="3.7 0.46 -1.82" color="#92400e"></a-cylinder>
-        <a-box width="1.72" height="0.05" depth="0.06" position="2.9 0.88 -1.82" color="#b45309"></a-box>
+        <a-cylinder radius="0.04" height="0.82" position="2.2 0.43 -1.82" color="#92400e"></a-cylinder>
+        <a-cylinder radius="0.04" height="0.82" position="3.7 0.43 -1.82" color="#92400e"></a-cylinder>
+        <a-box width="1.62" height="0.05" depth="0.06" position="2.95 0.82 -1.82" color="#b45309"></a-box>
 
-        <!-- Papan Status Kualitas Air di Sudut Kiri Dermaga -->
-        <a-entity position="-2.75 1.15 -1.78" rotation="0 36 0">
-          <a-cylinder radius="0.03" height="1.15" position="0 -0.55 0" color="#475569"></a-cylinder>
+        <!-- Papan Sensor Kualitas Air di Tepi Kanan Depan Dermaga (Terlihat Jelas & Utuh) -->
+        <a-entity position="1.38 0.56 -1.80" rotation="0 -18 0" scale="0.72 0.72 0.72">
+          <a-cylinder radius="0.03" height="0.62" position="0 -0.34 0" color="#475569"></a-cylinder>
           <a-plane width="2.10" height="0.46" color="#334155" material="shader: flat;" position="0 0 -0.01"></a-plane>
           <a-plane width="2.06" height="0.42" color="#0f172a" material="shader: flat;" position="0 0 0"></a-plane>
           <a-text value="SENSOR EKOSISTEM SUNGAI" align="center" position="0 0.12 0.02" color="#38bdf8" width="1.85" wrap-count="34" font-weight="bold"></a-text>
@@ -449,50 +450,62 @@
       <a-cone radius-bottom="0.08" radius-top="0.01" height="0.58" position="1.9 -0.70 -3.8" color="#15803d"></a-cone>
 
       <a-box id="riverWater" width="90" height="0.82" depth="15.5" position="0 -0.54 -6.2"
-             material="color: #525829; opacity: 0.86; transparent: true;"></a-box>
+             material="color: #464d24; opacity: 0.88; transparent: true;"></a-box>
       <a-plane id="riverSurface" width="90" height="15.5" rotation="-90 0 0" position="0 -0.125 -6.2"
-               material="color: #656d33; opacity: 0.55; transparent: true;"></a-plane>
+               material="color: #59632e; opacity: 0.48; transparent: true;"></a-plane>
+
+      <!-- Garis Riak Arus Sungai Bergerak -->
+      <a-entity id="waterRipples">
+        <a-plane width="2.2" height="0.06" rotation="-90 0 0" position="-3 -0.115 -2.8"
+                 material="color: #cbd5e1; opacity: 0.22; transparent: true;"
+                 animation="property: position; from: -6 -0.115 -2.8; to: 6 -0.115 -2.8; dur: 5200; loop: true; easing: linear"></a-plane>
+        <a-plane width="2.8" height="0.06" rotation="-90 0 0" position="1 -0.115 -4.1"
+                 material="color: #cbd5e1; opacity: 0.20; transparent: true;"
+                 animation="property: position; from: -7 -0.115 -4.1; to: 7 -0.115 -4.1; dur: 6100; loop: true; easing: linear"></a-plane>
+        <a-plane width="2.5" height="0.06" rotation="-90 0 0" position="-1 -0.115 -5.6"
+                 material="color: #cbd5e1; opacity: 0.18; transparent: true;"
+                 animation="property: position; from: -8 -0.115 -5.6; to: 8 -0.115 -5.6; dur: 6800; loop: true; easing: linear"></a-plane>
+      </a-entity>
 
       <!-- 4. PIPA LIMBAH & BUSA PENCEMAR (BANTARAN KIRI DEPAN) -->
-      <a-entity id="pollutionGroup" position="-3.6 -0.02 -4.2">
-        <a-cylinder radius="0.24" height="1.6" position="-0.65 0.16 0" rotation="0 0 90" color="#475569"></a-cylinder>
-        <a-torus radius="0.25" radius-tubular="0.035" position="0.15 0.16 0" rotation="0 90 0" color="#334155"></a-torus>
-        <a-cylinder id="sludgeStream" radius="0.15" height="0.65" position="0.32 -0.05 0" rotation="0 0 32"
-                    material="color: #3f3f1c; opacity: 0.92; transparent: true;"></a-cylinder>
+      <a-entity id="pollutionGroup" position="-2.85 -0.02 -3.65">
+        <a-cylinder radius="0.22" height="1.8" position="-0.75 0.16 0" rotation="0 0 90" color="#475569"></a-cylinder>
+        <a-torus radius="0.23" radius-tubular="0.035" position="0.15 0.16 0" rotation="0 90 0" color="#334155"></a-torus>
+        <a-cylinder id="sludgeStream" radius="0.14" height="0.62" position="0.30 -0.05 0" rotation="0 0 32"
+                    material="color: #3a3b18; opacity: 0.94; transparent: true;"></a-cylinder>
+        <!-- Gumpalan Busa Limbah Terfokus di Dekat Aliran Pipa -->
         <a-entity id="foamClusters">
-          <a-sphere radius="0.24" scale="1.8 0.25 1.4" position="0.65 -0.10 0.15" color="#fef08a"></a-sphere>
-          <a-sphere radius="0.20" scale="1.5 0.25 1.3" position="1.15 -0.10 0.45" color="#ecfccb"></a-sphere>
-          <a-sphere radius="0.28" scale="2.1 0.25 1.5" position="1.85 -0.10 0.25" color="#fef08a"></a-sphere>
-          <a-sphere radius="0.22" scale="1.7 0.25 1.4" position="2.65 -0.10 0.65" color="#ecfccb"></a-sphere>
-          <a-sphere radius="0.26" scale="1.9 0.25 1.3" position="3.45 -0.10 0.10" color="#fef08a"></a-sphere>
-          <a-sphere radius="0.20" scale="1.6 0.25 1.3" position="4.35 -0.10 0.55" color="#ecfccb"></a-sphere>
-          <a-sphere radius="0.25" scale="1.8 0.25 1.4" position="1.40 -0.10 1.25" color="#fef08a"></a-sphere>
-          <a-sphere radius="0.22" scale="1.6 0.25 1.2" position="2.95 -0.10 1.35" color="#ecfccb"></a-sphere>
+          <a-sphere radius="0.16" scale="1.6 0.20 1.2" position="0.48 -0.10 0.08" color="#d9d7a3"></a-sphere>
+          <a-sphere radius="0.13" scale="1.4 0.20 1.1" position="0.82 -0.10 0.28" color="#c7c58e"></a-sphere>
+          <a-sphere radius="0.18" scale="1.8 0.20 1.3" position="1.25 -0.10 0.15" color="#d9d7a3"></a-sphere>
+          <a-sphere radius="0.14" scale="1.5 0.20 1.2" position="1.78 -0.10 0.42" color="#c7c58e"></a-sphere>
+          <a-sphere radius="0.15" scale="1.6 0.20 1.1" position="2.30 -0.10 0.12" color="#d9d7a3"></a-sphere>
+          <a-sphere radius="0.13" scale="1.4 0.20 1.1" position="1.05 -0.10 0.65" color="#c7c58e"></a-sphere>
         </a-entity>
       </a-entity>
 
       <!-- 5. INSTALASI BIO-FILTER BERTINGKAT SKALA PENUH -->
-      <a-entity id="bioFilterGroup" position="-1.55 -0.95 -5.4" rotation="0 18 0" visible="false">
-        <a-box width="0.14" height="1.05" depth="0.55" position="-1.85 0.52 0" color="#cbd5e1"></a-box>
-        <a-box width="0.14" height="1.05" depth="0.55" position="1.85 0.52 0" color="#cbd5e1"></a-box>
-        <a-box width="3.90" height="0.06" depth="0.62" position="0 1.04 0" color="#0284c7"></a-box>
+      <a-entity id="bioFilterGroup" position="-1.25 -0.95 -4.9" rotation="0 16 0" visible="false">
+        <a-box width="0.14" height="1.05" depth="0.55" position="-1.75 0.52 0" color="#cbd5e1"></a-box>
+        <a-box width="0.14" height="1.05" depth="0.55" position="1.75 0.52 0" color="#cbd5e1"></a-box>
+        <a-box width="3.70" height="0.06" depth="0.62" position="0 1.04 0" color="#0284c7"></a-box>
 
-        <a-box id="filterLayer1" width="3.56" height="0.24" depth="0.46" position="0 0.16 0"
+        <a-box id="filterLayer1" width="3.36" height="0.24" depth="0.46" position="0 0.16 0"
                material="color: #94a3b8; opacity: 0.94; transparent: true;"></a-box>
-        <a-box id="filterLayer2" width="3.56" height="0.24" depth="0.46" position="0 0.42 0"
+        <a-box id="filterLayer2" width="3.36" height="0.24" depth="0.46" position="0 0.42 0"
                material="color: #1e293b; opacity: 0.95; transparent: true;"></a-box>
-        <a-box id="filterLayer3" width="3.56" height="0.24" depth="0.46" position="0 0.68 0"
+        <a-box id="filterLayer3" width="3.36" height="0.24" depth="0.46" position="0 0.68 0"
                material="color: #7dd3fc; opacity: 0.92; transparent: true;"></a-box>
       </a-entity>
 
       <!-- 6. INSTALASI AERATOR & GELEMBUNG OKSIGEN SKALA PENUH -->
-      <a-entity id="aeratorGroup" position="1.45 0 -3.4" visible="false">
-        <a-box width="0.65" height="0.48" depth="0.52" position="1.45 0.28 1.25" color="#0284c7"></a-box>
-        <a-box width="0.48" height="0.18" depth="0.55" position="1.45 0.36 1.25" color="#38bdf8"></a-box>
-        <a-cylinder radius="0.03" height="1.85" position="0.75 -0.35 0.65" rotation="35 0 42" color="#e0f2fe"></a-cylinder>
-        <a-cylinder radius="0.05" height="2.6" position="0 -0.88 0" rotation="0 0 90" color="#38bdf8"></a-cylinder>
+      <a-entity id="aeratorGroup" position="1.25 0 -3.2" visible="false">
+        <a-box width="0.60" height="0.45" depth="0.48" position="1.35 0.26 1.10" color="#0284c7"></a-box>
+        <a-box width="0.44" height="0.16" depth="0.51" position="1.35 0.34 1.10" color="#38bdf8"></a-box>
+        <a-cylinder radius="0.03" height="1.75" position="0.68 -0.35 0.55" rotation="35 0 42" color="#e0f2fe"></a-cylinder>
+        <a-cylinder radius="0.05" height="2.4" position="0 -0.88 0" rotation="0 0 90" color="#38bdf8"></a-cylinder>
 
-        <a-entity id="bubbleStream1" position="-0.85 0 0">
+        <a-entity id="bubbleStream1" position="-0.78 0 0">
           <a-sphere radius="0.045" position="0 -0.82 0" color="#e0f2fe"
                     animation="property: position; from: 0 -0.82 0; to: 0 -0.14 0; dur: 1150; loop: true; easing: linear"></a-sphere>
           <a-sphere radius="0.035" position="0.08 -0.82 0.06" color="#ffffff"
@@ -506,7 +519,7 @@
                     animation="property: position; from: -0.08 -0.82 -0.05; to: -0.08 -0.14 -0.05; dur: 1250; delay: 420; loop: true; easing: linear"></a-sphere>
         </a-entity>
 
-        <a-entity id="bubbleStream3" position="0.85 0 0">
+        <a-entity id="bubbleStream3" position="0.78 0 0">
           <a-sphere radius="0.045" position="0 -0.82 0" color="#e0f2fe"
                     animation="property: position; from: 0 -0.82 0; to: 0 -0.14 0; dur: 1080; loop: true; easing: linear"></a-sphere>
           <a-sphere radius="0.035" position="0.06 -0.82 -0.06" color="#ffffff"
@@ -516,67 +529,67 @@
 
       <!-- 7. POPULASI IKAN DI DALAM SUNGAI SEKITAR -->
       <a-entity id="fishGroup">
-        <a-entity id="fish-1" position="-1.4 -0.18 -3.0"
-                  animation="property: position; from: -1.8 -0.18 -3.1; to: -1.1 -0.18 -2.8; dir: alternate; dur: 3200; loop: true; easing: easeInOutSine">
+        <a-entity id="fish-1" position="-1.1 -0.18 -2.7"
+                  animation="property: position; from: -1.5 -0.18 -2.8; to: -0.7 -0.18 -2.5; dir: alternate; dur: 3200; loop: true; easing: easeInOutSine">
           <a-sphere id="fishBody-1" radius="0.11" scale="1.7 0.85 0.65" color="#9ca3af"></a-sphere>
           <a-cone id="fishTail-1" radius-bottom="0.08" radius-top="0.005" height="0.13" position="-0.19 0 0" rotation="0 0 90" color="#6b7280"></a-cone>
         </a-entity>
 
-        <a-entity id="fish-2" position="1.2 -0.20 -3.2"
-                  animation="property: position; from: 1.6 -0.20 -3.3; to: 0.9 -0.20 -2.9; dir: alternate; dur: 3600; loop: true; easing: easeInOutSine">
+        <a-entity id="fish-2" position="0.8 -0.20 -2.9"
+                  animation="property: position; from: 1.2 -0.20 -3.0; to: 0.4 -0.20 -2.6; dir: alternate; dur: 3600; loop: true; easing: easeInOutSine">
           <a-sphere id="fishBody-2" radius="0.10" scale="1.7 0.85 0.65" color="#9ca3af"></a-sphere>
           <a-cone id="fishTail-2" radius-bottom="0.075" radius-top="0.005" height="0.12" position="0.18 0 0" rotation="0 0 -90" color="#6b7280"></a-cone>
         </a-entity>
 
-        <a-entity id="fish-3" position="-2.2 -0.45 -3.6" visible="false"
-                  animation="property: position; from: -2.8 -0.48 -3.8; to: 1.8 -0.36 -3.2; dir: alternate; dur: 4200; loop: true; easing: easeInOutSine">
+        <a-entity id="fish-3" position="-1.8 -0.45 -3.4" visible="false"
+                  animation="property: position; from: -2.4 -0.48 -3.6; to: 1.5 -0.36 -3.0; dir: alternate; dur: 4200; loop: true; easing: easeInOutSine">
           <a-sphere radius="0.12" scale="1.75 0.9 0.65" color="#fb923c"></a-sphere>
           <a-cone radius-bottom="0.085" radius-top="0.005" height="0.14" position="-0.21 0 0" rotation="0 0 90" color="#ea580c"></a-cone>
         </a-entity>
 
-        <a-entity id="fish-4" position="2.4 -0.52 -4.0" visible="false"
-                  animation="property: position; from: 2.9 -0.55 -4.2; to: -1.6 -0.40 -3.5; dir: alternate; dur: 4600; loop: true; easing: easeInOutSine">
+        <a-entity id="fish-4" position="2.0 -0.52 -3.8" visible="false"
+                  animation="property: position; from: 2.5 -0.55 -4.0; to: -1.4 -0.40 -3.3; dir: alternate; dur: 4600; loop: true; easing: easeInOutSine">
           <a-sphere radius="0.11" scale="1.75 0.9 0.65" color="#38bdf8"></a-sphere>
           <a-cone radius-bottom="0.08" radius-top="0.005" height="0.13" position="0.20 0 0" rotation="0 0 -90" color="#0284c7"></a-cone>
         </a-entity>
 
-        <a-entity id="fish-5" position="-0.8 -0.62 -4.5" visible="false"
-                  animation="property: position; from: -2.4 -0.65 -4.7; to: 2.2 -0.50 -4.1; dir: alternate; dur: 3900; loop: true; easing: easeInOutSine">
+        <a-entity id="fish-5" position="-0.6 -0.62 -4.2" visible="false"
+                  animation="property: position; from: -2.1 -0.65 -4.4; to: 1.9 -0.50 -3.9; dir: alternate; dur: 3900; loop: true; easing: easeInOutSine">
           <a-sphere radius="0.10" scale="1.75 0.9 0.65" color="#facc15"></a-sphere>
           <a-cone radius-bottom="0.075" radius-top="0.005" height="0.12" position="-0.18 0 0" rotation="0 0 90" color="#eab308"></a-cone>
         </a-entity>
 
-        <a-entity id="fish-6" position="1.5 -0.38 -5.8" visible="false"
-                  animation="property: position; from: 3.2 -0.42 -6.0; to: -2.6 -0.32 -5.5; dir: alternate; dur: 4400; loop: true; easing: easeInOutSine">
+        <a-entity id="fish-6" position="1.3 -0.38 -5.4" visible="false"
+                  animation="property: position; from: 2.8 -0.42 -5.6; to: -2.2 -0.32 -5.1; dir: alternate; dur: 4400; loop: true; easing: easeInOutSine">
           <a-sphere radius="0.11" scale="1.75 0.9 0.65" color="#fb923c"></a-sphere>
           <a-cone radius-bottom="0.08" radius-top="0.005" height="0.13" position="0.19 0 0" rotation="0 0 -90" color="#f97316"></a-cone>
         </a-entity>
 
-        <a-entity id="fish-7" position="-3.2 -0.42 -4.8" visible="false"
-                  animation="property: position; from: -3.8 -0.45 -5.0; to: -1.8 -0.34 -4.3; dir: alternate; dur: 3500; loop: true; easing: easeInOutSine">
+        <a-entity id="fish-7" position="-2.8 -0.42 -4.5" visible="false"
+                  animation="property: position; from: -3.4 -0.45 -4.7; to: -1.5 -0.34 -4.0; dir: alternate; dur: 3500; loop: true; easing: easeInOutSine">
           <a-sphere radius="0.10" scale="1.75 0.9 0.65" color="#34d399"></a-sphere>
           <a-cone radius-bottom="0.075" radius-top="0.005" height="0.12" position="-0.18 0 0" rotation="0 0 90" color="#059669"></a-cone>
         </a-entity>
 
-        <a-entity id="fish-8" position="3.1 -0.44 -4.6" visible="false"
-                  animation="property: position; from: 3.7 -0.48 -4.8; to: 1.6 -0.35 -4.1; dir: alternate; dur: 3700; loop: true; easing: easeInOutSine">
+        <a-entity id="fish-8" position="2.7 -0.44 -4.3" visible="false"
+                  animation="property: position; from: 3.3 -0.48 -4.5; to: 1.4 -0.35 -3.8; dir: alternate; dur: 3700; loop: true; easing: easeInOutSine">
           <a-sphere radius="0.10" scale="1.75 0.9 0.65" color="#facc15"></a-sphere>
           <a-cone radius-bottom="0.075" radius-top="0.005" height="0.12" position="0.18 0 0" rotation="0 0 -90" color="#ca8a04"></a-cone>
         </a-entity>
       </a-entity>
     </a-entity>
 
-    <!-- ================= PANEL UTAMA MVR 3D (TENGAH) ================= -->
-    <a-entity id="mainPanel" position="-0.75 1.72 -3.65">
+    <!-- ================= PANEL UTAMA MVR 3D (KIRI-ATAS AGAR SUNGAI TERBUKA) ================= -->
+    <a-entity id="mainPanel" position="-1.42 2.02 -3.95" rotation="0 16 0" scale="0.74 0.74 0.74">
       <a-plane width="4.44" height="3.18" color="#334155" material="shader: flat;" position="0 0 -0.01"></a-plane>
       <a-plane width="4.40" height="3.14" color="#0f172a" material="shader: flat; opacity: 0.94; transparent: true;" position="0 0 0"></a-plane>
 
       <!-- 1. HEADER BAR -->
       <a-plane width="4.24" height="0.42" color="#1e293b" material="shader: flat;" position="0 1.31 0.01"></a-plane>
-      <a-text value="Simulasi Ekosistem Sungai (STEM-DT)" position="-2.02 1.38 0.02" color="#f8fafc" width="2.85" wrap-count="42" font-weight="bold"></a-text>
-      <a-text value="Amati ekosistem sungai di sekitar Anda, tentukan solusi, lalu konfirmasi." position="-2.02 1.22 0.02" color="#94a3b8" width="2.45" wrap-count="64"></a-text>
+      <a-text value="Simulasi Ekosistem Sungai (STEM-DT)" position="-2.02 1.38 0.02" color="#f8fafc" width="2.80" wrap-count="42" font-weight="bold"></a-text>
+      <a-text value="Amati sungai di sekitar Anda, pilih solusi, lalu konfirmasi." position="-2.02 1.22 0.02" color="#94a3b8" width="2.18" wrap-count="60"></a-text>
 
-      <!-- Tombol Audio VR (Klik untuk hidup/mati suara di ruang VR) -->
+      <!-- Tombol Audio VR -->
       <a-entity id="vrAudioBtn" position="0.46 1.31 0.02" class="clickable" onclick="toggleAudioMute()">
         <a-plane id="vrAudioBg" width="0.68" height="0.25" color="#0284c7" material="shader: flat;" position="0 0 0"></a-plane>
         <a-text id="vrAudioStatus" value="Suara: ON" align="center" position="0 0 0.01" color="#f8fafc" width="1.15" wrap-count="18"></a-text>
@@ -685,8 +698,8 @@
       </a-entity>
     </a-entity>
 
-    <!-- ================= PANEL SAMPING KANAN: DASHBOARD PROFIL & LOG ================= -->
-    <a-entity id="dashboardPanel" position="2.62 1.72 -3.02" rotation="0 -30 0">
+    <!-- ================= PANEL SAMPING KANAN: DASHBOARD PROFIL & LOG (UTUH DI LAYAR) ================= -->
+    <a-entity id="dashboardPanel" position="1.78 2.02 -3.72" rotation="0 -22 0" scale="0.74 0.74 0.74">
       <a-plane width="2.34" height="3.18" color="#334155" material="shader: flat;" position="0 0 -0.01"></a-plane>
       <a-plane width="2.30" height="3.14" color="#1e293b" material="shader: flat; opacity: 0.94; transparent: true;" position="0 0 0"></a-plane>
 
@@ -845,7 +858,6 @@
         return ctx;
       }
 
-      // 1. Generator Suara Aliran Sungai (Brown Noise + Filter + Modulasi Arus)
       function setupRiverAmbient() {
         if (!ctx) return;
         const bufferSize = ctx.sampleRate * 3;
@@ -868,7 +880,6 @@
         riverFilter.frequency.value = 340;
         riverFilter.Q.value = 0.7;
 
-        // Modulasi gelombang air alami perlahan
         const lfo = ctx.createOscillator();
         const lfoGain = ctx.createGain();
         lfo.type = 'sine';
@@ -901,7 +912,6 @@
         riverFilter.frequency.setTargetAtTime(targetFreq, now, 0.25);
       }
 
-      // 2. Generator Gelembung Aerator
       function triggerSingleBubble() {
         if (isMuted || !ctx || ctx.state !== 'running' || aeratorLevel <= 0) return;
         const now = ctx.currentTime;
@@ -945,7 +955,6 @@
         applyRiverMix();
       }
 
-      // 3. Nada Umpan Balik Tombol & Rotary
       function playNote(freq, startOffset, duration, type = 'sine', volume = 0.09) {
         const audioCtx = ensureContext();
         if (!audioCtx || isMuted) return;
@@ -1066,22 +1075,18 @@
       foamEl.setAttribute('visible', foamVisible);
       sludgeEl.setAttribute('visible', sludgeVisible);
 
-      // Sinkronisasi suara sungai & gelembung aerator
       SoundEngine.setEnvironmentAudio(aeratorLevel, isTurbulent);
 
-      // Pengaturan lapisan Bio-Filter skala penuh
       bioFilterEl.setAttribute('visible', filterLayers > 0);
       l1.setAttribute('visible', filterLayers >= 1);
       l2.setAttribute('visible', filterLayers >= 2);
       l3.setAttribute('visible', filterLayers >= 3);
 
-      // Pengaturan Aerator & Gelembung Oksigen skala penuh
       aeratorEl.setAttribute('visible', aeratorLevel > 0);
       b1.setAttribute('visible', aeratorLevel >= 1);
       b2.setAttribute('visible', aeratorLevel >= 2);
       b3.setAttribute('visible', aeratorLevel >= 3);
 
-      // Pengaturan Populasi & Kesehatan Ikan
       const fBody1 = document.getElementById('fishBody-1');
       const fTail1 = document.getElementById('fishTail-1');
       const fBody2 = document.getElementById('fishBody-2');
@@ -1113,7 +1118,6 @@
       const isPcOrTiDone = completedStages.has("PC") || completedStages.has("TI");
       const isIpDone = completedStages.has("IP");
 
-      // 1. Jika Tahap PC (atau TI) sudah tuntas -> ekosistem sungai sekitar pulih total
       if (isPcOrTiDone && currentStage !== "PC") {
         setRiverEnvironmentState({
           skyColor: '#38bdf8',
@@ -1132,7 +1136,6 @@
         return;
       }
 
-      // 2. Saat siswa berada di Tahap PC -> pratinjau langsung sesuai opsi rotary (1-4)
       if (currentStage === "PC") {
         if (selectedOption === 1) {
           setRiverEnvironmentState({
@@ -1198,7 +1201,6 @@
         return;
       }
 
-      // 3. Jika Tahap IP sudah dikonfirmasi -> instalasi awal unit bio-filter & aerator muncul
       if (isIpDone) {
         setRiverEnvironmentState({
           skyColor: '#60a5fa',
@@ -1217,12 +1219,11 @@
         return;
       }
 
-      // 4. Kondisi awal (Tahap EA / DI) -> sungai sekitar tercemar limbah
       setRiverEnvironmentState({
         skyColor: '#7c8b99',
-        waterColor: '#525829',
-        waterOpacity: 0.86,
-        surfaceColor: '#656d33',
+        waterColor: '#464d24',
+        waterOpacity: 0.88,
+        surfaceColor: '#59632e',
         foamVisible: true,
         sludgeVisible: true,
         filterLayers: 0,
@@ -1520,7 +1521,6 @@
       addLog("Catatan interaksi berhasil disimpan.");
     }
 
-    // Aktifkan mesin audio pada sentuhan/klik pertama pengguna
     window.addEventListener('pointerdown', () => SoundEngine.unlock(), { once: true });
 
     // ================= PENERIMA SINYAL DARI ESP32 BLE HID & KEYBOARD =================
